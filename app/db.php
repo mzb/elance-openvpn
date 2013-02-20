@@ -96,6 +96,38 @@ class DB
     );
   }
 
+  public static function find_group_by_name($name)
+  {
+    $stmt = self::exec('SELECT * FROM groups WHERE name = ?', array($name));
+    $group = null;
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $group = new Group($row);
+    }
+    return $group;
+  }
+
+  public static function find_group_by_id($id)
+  {
+    $stmt = self::exec('SELECT * FROM groups WHERE id = ?', array($id));
+    $group = null;
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $group = new Group($row);
+    }
+    return $group;
+  }
+
+  public static function update_group($group)
+  {
+    self::exec(
+      'UPDATE groups SET name = :name, description = :description WHERE id = :id',
+      array(
+        ':name' => $group->name, 
+        ':description' => $group->description, 
+        ':id' => $group->id
+      )
+    );
+  }
+
 
   private static function exec($sql, $bindings = array())
   {

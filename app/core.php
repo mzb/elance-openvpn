@@ -39,26 +39,21 @@ class Core
 
   static function update_user($id, $fullname)
   {
-    $user = DB::find_user_by_id($id);
-    if (!$user) throw new RecordNotFound($id);
-
+    $user = self::get_user($id);
     $user->fullname = trim($fullname);
     DB::update_user($user);
   }
 
   static function toggle_user_suspend($id)
   {
-    $user = DB::find_user_by_id($id);
-    if (!$user) throw new RecordNotFound($id);
+    $user = self::get_user($id);
     $user->suspended = !$user->suspended;
     DB::update_user($user);
   }
 
   static function delete_user($id)
   {
-    $user = DB::find_user_by_id($id);
-    if (!$user) throw new RecordNotFound($id);
-    DB::delete_user($user);
+    DB::delete_user(self::get_user($id));
   }
 
   static function list_users()
@@ -70,13 +65,72 @@ class Core
   {
     $user = DB::find_user_by_id($id);
     if (!$user) throw new RecordNotFound($id);
-
     return $user;
+  }
+
+  static function create_group($name, $description)
+  {
+    $group = new Group(array(
+      'name' => trim($name),
+      'description' => $description
+    ));
+
+    if (DB::find_group_by_name($group->name)) {
+      return array(
+        $group,
+        array('name' => sprintf('Name must be unique: "%s" is already taken', $group->name))
+      );
+    }
+    if (!$group->name) {
+      return array(
+        $group,
+        array('name' => 'Name cannot be blank')
+      );
+    }
+
+    DB::save_group($group);
+
+    return array($group, array());
+  }
+
+  static function update_group($id, $name, $description)
+  {
+    $group = self::get_group($id);
+    $group->description = $description;
+    $name = trim($name);
+
+    $name_unique = $name == $group->name || !DB::find_group_by_name($name);
+    if (!$name_unique) {
+      $group->name = $name;
+      return array(
+        $group,
+        array('name' => sprintf('Name must be unique: "%s" is already taken', $group->name))
+      );
+    }
+
+    $group->name = $name;
+    if (!$group->name) {
+      return array(
+        $group,
+        array('name' => 'Name cannot be blank')
+      );
+    }
+
+    DB::update_group($group);
+
+    return array($group, array());
   }
 
   static function list_groups()
   {
     return DB::find_groups();
+  }
+
+  static function get_group($id)
+  {
+    $group = DB::find_group_by_id($id);
+    if (!$group) throw new RecordNotFound($id);
+    return $group;
   }
 }
 

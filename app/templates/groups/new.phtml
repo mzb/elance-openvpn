@@ -8,23 +8,8 @@
 </div>
 
 <form class="form-horizontal" action="<?php echo $app->urlFor('groups.create') ?>" method="post">
-  <?php partial('_form_errors.phtml', array('errors' => $errors)) ?>
-
-  <div class="control-group">
-    <label class="control-label" for="group-name">Name</label>
-    <div class="controls">
-      <input name="name" type="text" id="group-name" value="<?php echo $group->name ?>">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="group-fullname">Description</label>
-    <div class="controls">
-      <textarea name="description" id="group-description"><?php echo $group->description ?></textarea>
-    </div>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <button type="submit" class="btn btn-primary">Save</button>
-    </div>
-  </div>
+  <?php partial('groups/_form.phtml', array(
+    'errors' => $errors,
+    'group' => $group
+  )) ?>
 </form>

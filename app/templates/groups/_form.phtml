@@ -1,0 +1,19 @@
+<?php partial('_form_errors.phtml', array('errors' => $errors)) ?>
+
+<div class="control-group">
+  <label class="control-label" for="group-name">Name</label>
+  <div class="controls">
+    <input name="name" type="text" id="group-name" value="<?php echo $params ? $params['name'] : $group->name ?>">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="group-description">Description</label>
+  <div class="controls">
+    <textarea name="description" id="group-description"><?php echo $params ? $params['description'] : $group->description ?></textarea>
+  </div>
+</div>
+<div class="control-group">
+  <div class="controls">
+    <button type="submit" class="btn btn-primary">Save</button>
+  </div>
+</div>

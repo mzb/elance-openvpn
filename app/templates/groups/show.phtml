@@ -1,0 +1,15 @@
+<ul class="breadcrumb">
+  <li><a href="<?php echo $app->urlFor('groups') ?>">groups</a> <span class="divider">/</span></li>
+  <li><a href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>"><?php echo $group->name ?></a></li>
+</ul>
+
+<div class="page-header">
+  <h3><?php echo $group->name ?></h3>
+</div>
+
+<form class="form-horizontal" action="<?php echo $app->urlFor('groups.update', array('id' => $group->id)) ?>" method="post">
+  <?php partial('groups/_form.phtml', array(
+    'errors' => $errors,
+    'group' => $group
+  )) ?>
+</form>

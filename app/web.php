@@ -120,28 +120,38 @@ $groups_index = function() use ($app) {
 
 $groups_show = function($id) use ($app) {
   $app->render('groups/show.phtml', array(
-    'group' => Core::get_group($id)
+    'group' => Core::get_group($id),
+    'errors' => array()
   ));
 };
 
-$groups_update = function($id) use ($app) {
-  $group = DB::findgroupById($id);
-  if (!$group) $app->notFound();
-  $group->fullname = $app->request()->params('fullname');
-  DB::updategroup($group);
+$groups_update = function($id) use ($app, $groups_show) {
+  list($_, $errors) = Core::update_group(
+    $id,
+    $app->request()->params('name'),
+    $app->request()->params('description')
+  );
+  if (!$errors) {
+    $app->flash('success', 'Changes saved');
+    $app->redirect($app->urlFor('groups.show', array('id' => $id)));
+  }
 
-  $app->flash('success', 'Changes saved');
-  $app->redirect($app->urlFor('groups.show', array('id' => $id)));
+  $app->render('groups/show.phtml', array(
+    'group' => Core::get_group($id),
+    'errors' => $errors
+  ));
 };
 
 $groups_new = function() use ($app) {
   $group = new Group();
 
   if ('POST' == $app->request()->getMethod()) {
-    $group->name = $app->request()->params('name');
-    $group->description = $app->request()->params('description');
+    list($group, $errors) = Core::create_group(
+      $app->request()->params('name'),
+      $app->request()->params('description')
+    );
 
-    if (!($errors = DB::saveGroup($group))) {
+    if (!$errors) {
       $app->flash('success', 'Group added');
       $app->redirect($app->urlFor('groups'));
     }

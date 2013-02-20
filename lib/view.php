@@ -17,6 +17,7 @@ class LayoutView extends \Slim\View
     $this->setTemplate($template);
 
     $this->data['app'] = \Slim\Slim::getInstance();
+    $this->data['params'] = $this->data['app']->request()->params();
     extract($this->data);
 
     ob_start();
@@ -31,6 +32,8 @@ class LayoutView extends \Slim\View
 
 function partial($template, $data = array())
 {
+  $data['app'] = \Slim\Slim::getInstance();
+  $data['params'] = $data['app']->request()->params();
   extract($data);
   require \Slim\Slim::getInstance()->config('templates.path') . '/' . $template;
 }
