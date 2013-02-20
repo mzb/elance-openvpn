@@ -30,10 +30,21 @@
   <div class="control-group">
     <div class="controls">
       <?php if ($user->suspended): ?>
-        <button type="submit" class="btn btn-succes">Unsuspend</button>
+        <button type="submit" class="btn btn-success">Unsuspend access</button>
       <?php else: ?>
-        <button type="submit" class="btn btn-danger">Suspend</button>
+        <button type="submit" class="btn btn-danger">Suspend access</button>
       <?php endif ?>
     </div>
   </div>
 </form>
+
+<h5>Get config file(s)</h5>
+<div class="form-horizontal">
+  <div class="control-group">
+    <div class="controls">
+      <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'win')) ?>" class="btn btn-large">for Windows</a>
+      <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'osx')) ?>" class="btn btn-large">for Mac OS X</a>
+      <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'lnx')) ?>" class="btn btn-large">for Linux</a>
+    </div>
+  </div>
+</div>

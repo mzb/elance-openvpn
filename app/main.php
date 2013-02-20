@@ -5,6 +5,7 @@ require '../lib/Slim/Slim.php';
 
 require '../lib/view.php';
 require 'db.php';
+require '../lib/OpenVPN.php';
 
 
 session_start();
