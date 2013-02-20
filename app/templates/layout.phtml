@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>OpenVPN Setup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="brand" href="/">OpenVPN Setup</a>
+          <ul class="nav" style="margin-left: 60px">
+            <li><a href="<?php echo $app->urlFor('users') ?>">Users</a></li>
+            <li><a href="<?php echo $app->urlFor('groups') ?>">Groups</a></li>
+            <li><a href="#">Change password</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <?php echo $__content__ ?>
+    </div>
+
+    <script src="js/jquery-1.9.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
