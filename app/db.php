@@ -87,6 +87,36 @@ class DB
     self::exec('DELETE FROM users WHERE id = ?', array($user->id));
   }
 
+  public static function findGroups()
+  {
+    $stmt = self::exec('SELECT * FROM groups' );
+    $groups = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $groups[] = new group($row);
+    }
+    return $groups;
+  }
+
+  public function saveGroup($group)
+  {
+    /* if (self::findUserByUsername($user->username)) { */
+    /*   return array('username' => sprintf('Username must be unique: "%s" is already taken', $user->username)); */
+    /* } */
+    /* if (!trim($user->username)) { */
+    /*   return array('username' => 'Username cannot be blank'); */
+    /* } */
+
+    self::exec(
+      'INSERT INTO groups (id, name, description) VALUES(NULL, :name, :description)',
+      array(
+        ':name' => $group->name,
+        ':description' => $group->description,
+      )
+    );
+
+    return array();
+  }
+
 
   private static function exec($sql, $bindings = array())
   {

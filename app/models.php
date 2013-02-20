@@ -18,3 +18,9 @@ class User extends Model
   public $fullname;
   public $suspended = 0;
 }
+
+class Group extends Model
+{
+  public $name;
+  public $description;
+}

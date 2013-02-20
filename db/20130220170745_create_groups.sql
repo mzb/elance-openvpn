@@ -1,0 +1,5 @@
+CREATE TABLE groups (
+  id INTEGER PRIMARY KEY,
+  name VARCHAR(64) UNIQUE NOT NULL,
+  description TEXT
+);
