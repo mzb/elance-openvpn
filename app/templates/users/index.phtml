@@ -12,12 +12,12 @@
   <tbody>
     <?php foreach ($users as $user): ?>
       <tr>
-        <td>1</td>
-        <td>@mdo</td>
-        <td>Mark Otto</td>
+        <td><?php echo $user->id ?></td>
+        <td><?php echo $user->username ?></td>
+        <td><?php echo $user->fullname ?></td>
         <td>
-          <button class="btn btn-small">Edit</button>
-          <button class="btn btn-small btn-danger">Delete</button>
+        <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
+          <a class="btn btn-small btn-danger">Delete</a>
         </td>
       </tr>
     <?php endforeach ?>

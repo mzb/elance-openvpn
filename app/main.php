@@ -7,6 +7,8 @@ require '../lib/view.php';
 require 'db.php';
 
 
+session_start();
+
 $app = new \Slim\Slim(array(
   'templates.path' => __DIR__ . '/templates',
   'db' => array(
@@ -18,11 +20,17 @@ $app->view()->setLayout('layout.phtml');
 DB::connect($app->config('db'));
 
 
+$section = function($section) use ($app) {
+  return function() use ($section, $app) {
+    $app->view()->setData('section', $section);
+  };
+};
+
 require 'users.php';
 
 require 'groups.php';
 
-$app->get('/', $users_index);
+$app->get('/', $section('users'), $users_index);
 
 
 return $app;

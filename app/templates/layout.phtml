@@ -3,8 +3,8 @@
   <head>
     <title>OpenVPN Setup</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/css/bootstrap-responsive.min.css" rel="stylesheet">
     <style>
       body {
         padding-top: 60px;
@@ -39,10 +39,17 @@
     </div>
 
     <div class="container">
+      <?php foreach ($flash as $k => $msg): ?>
+        <div class="alert alert-<?php echo $k ?>">
+          <a href="#" class="close" data-dismiss="alert">&times;</a>
+          <?php echo $msg ?>
+        </div>
+      <?php endforeach ?>
+
       <?php echo $__content__ ?>
     </div>
 
-    <script src="js/jquery-1.9.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="/js/jquery-1.9.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
   </body>
 </html>
