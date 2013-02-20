@@ -1,8 +1,5 @@
 <?php
 
-require 'models.php';
-
-
 class DB
 {
   private static $conn;
@@ -20,7 +17,7 @@ class DB
     );
   }
 
-  public static function findUsers()
+  public static function find_users()
   {
     $stmt = self::exec('SELECT * FROM users' );
     $users = array();
@@ -30,7 +27,7 @@ class DB
     return $users;
   }
 
-  public function findUserById($id)
+  public static function find_user_by_id($id)
   {
     $stmt = self::exec('SELECT * FROM users WHERE id = ?', array($id));
     $user = null;
@@ -40,7 +37,7 @@ class DB
     return $user;
   }
 
-  public function findUserByUsername($username)
+  public static function find_user_by_username($username)
   {
     $stmt = self::exec('SELECT * FROM users WHERE username = ?', array($username));
     $user = null;
@@ -50,7 +47,7 @@ class DB
     return $user;
   }
 
-  public function updateUser($user)
+  public static function update_user($user)
   {
     self::exec(
       'UPDATE users SET fullname = :fullname, suspended = :suspended WHERE id = :id',
@@ -61,15 +58,8 @@ class DB
     );
   }
 
-  public function saveUser($user)
+  public static function save_user($user)
   {
-    if (self::findUserByUsername($user->username)) {
-      return array('username' => sprintf('Username must be unique: "%s" is already taken', $user->username));
-    }
-    if (!trim($user->username)) {
-      return array('username' => 'Username cannot be blank');
-    }
-
     self::exec(
       'INSERT INTO users (id, username, fullname, suspended) VALUES(NULL, :username, :fullname, :suspended)',
       array(
@@ -78,16 +68,14 @@ class DB
         ':suspended' => $user->suspended
       )
     );
-
-    return array();
   }
 
-  public function deleteUser($user)
+  public static function delete_user($user)
   {
     self::exec('DELETE FROM users WHERE id = ?', array($user->id));
   }
 
-  public static function findGroups()
+  public static function find_groups()
   {
     $stmt = self::exec('SELECT * FROM groups' );
     $groups = array();
@@ -97,15 +85,8 @@ class DB
     return $groups;
   }
 
-  public function saveGroup($group)
+  public static function save_group($group)
   {
-    /* if (self::findUserByUsername($user->username)) { */
-    /*   return array('username' => sprintf('Username must be unique: "%s" is already taken', $user->username)); */
-    /* } */
-    /* if (!trim($user->username)) { */
-    /*   return array('username' => 'Username cannot be blank'); */
-    /* } */
-
     self::exec(
       'INSERT INTO groups (id, name, description) VALUES(NULL, :name, :description)',
       array(
@@ -113,8 +94,6 @@ class DB
         ':description' => $group->description,
       )
     );
-
-    return array();
   }
 
 
