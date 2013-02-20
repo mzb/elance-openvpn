@@ -14,7 +14,7 @@ class DB
       null,
       null,
       array(
-        PDO::ATTR_PERSISTENT => true,
+        PDO::ATTR_PERSISTENT => false,// FIXME: true in PRODUCTION
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
       )
     );
@@ -43,8 +43,8 @@ class DB
   public function updateUser($user)
   {
     self::exec(
-      'UPDATE users SET fullname = ? WHERE id = ?',
-      array($user->fullname, $user->id)
+      'UPDATE users SET fullname = ?, suspended = ? WHERE id = ?',
+      array($user->fullname, intval($user->suspended), $user->id)
     );
   }
 

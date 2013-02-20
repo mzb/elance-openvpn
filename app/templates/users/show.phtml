@@ -3,7 +3,7 @@
   <li><a href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>"><?php echo $user->username ?></a></li>
 </ul>
 
-<h3><?php echo $user->username ?></h3>
+<h3><?php echo $user->username ?> (<?php echo $user->fullname ?>)</h3>
 
 <form class="form-horizontal" action="<?php echo $app->urlFor('users.update', array('id' => $user->id)) ?>" method="post">
   <div class="control-group">
@@ -19,4 +19,17 @@
   </div>
 </form>
 
+
 <h4>OpenVPN settings</h4>
+
+<form class="form-horizontal" action="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>" method="post">
+  <div class="control-group">
+    <div class="controls">
+      <?php if ($user->suspended): ?>
+        <button type="submit" class="btn btn-succes">Unsuspend</button>
+      <?php else: ?>
+        <button type="submit" class="btn btn-danger">Suspend</button>
+      <?php endif ?>
+    </div>
+  </div>
+</form>
