@@ -17,11 +17,11 @@ $app->get('/', function() use ($app) {
 });
 
 $app->get('/users', function() use ($app) {
-  $app->render('users/index.phtml');
+  $app->render('users/index.phtml', array('section' => 'users'));
 })->name('users');
 
 $app->get('/groups', function() use ($app) {
-
+  $app->render('groups/index.phtml', array('section' => 'groups'));
 })->name('groups');
 
 return $app;

@@ -18,9 +18,18 @@
         <div class="container">
           <a class="brand" href="/">OpenVPN Setup</a>
           <ul class="nav" style="margin-left: 60px">
-            <li><a href="<?php echo $app->urlFor('users') ?>">Users</a></li>
-            <li><a href="<?php echo $app->urlFor('groups') ?>">Groups</a></li>
-            <li><a href="#">Change password</a></li>
+            <?php
+              $menu = array(
+                'users' => 'Users',
+                'groups' => 'Groups',
+                /* 'change_password' => 'Change password' */
+              );
+            ?>
+            <?php foreach ($menu as $key => $name): ?>
+              <li class="<?php echo $section == $key ? 'active' : ''?>">
+                <a href="<?php echo $app->urlFor($key) ?>"><?php echo $name ?></a>
+              </li>
+            <?php endforeach ?>
           </ul>
         </div>
       </div>
