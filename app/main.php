@@ -4,24 +4,25 @@ require '../lib/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
 
 require '../lib/view.php';
+require 'db.php';
 
 
 $app = new \Slim\Slim(array(
   'templates.path' => __DIR__ . '/templates',
+  'db' => array(
+    'dsn' => 'sqlite:' . __DIR__ . '/../db/development.db',
+  ),
   'view' => new LayoutView()
 ));
 $app->view()->setLayout('layout.phtml');
+DB::connect($app->config('db'));
 
-$app->get('/', function() use ($app) {
-  $app->render('dashboard.phtml');
-});
 
-$app->get('/users', function() use ($app) {
-  $app->render('users/index.phtml', array('section' => 'users'));
-})->name('users');
+require 'users.php';
 
-$app->get('/groups', function() use ($app) {
-  $app->render('groups/index.phtml', array('section' => 'groups'));
-})->name('groups');
+require 'groups.php';
+
+$app->get('/', $users_index);
+
 
 return $app;
