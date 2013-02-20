@@ -28,3 +28,9 @@ class LayoutView extends \Slim\View
     return ob_get_clean();
   }
 }
+
+function partial($template, $data = array())
+{
+  extract($data);
+  require \Slim\Slim::getInstance()->config('templates.path') . '/' . $template;
+}

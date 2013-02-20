@@ -1,4 +1,8 @@
-<h3>List of users</h3>
+<div class="page-header">
+  <h3>List of users</h3>
+</div>
+
+<a href="<?php echo $app->urlFor('users.new') ?>" class="btn btn-success pull-right">Add user</a>
 
 <table class="table  table-condensed table-hover">
   <thead>
@@ -16,7 +20,7 @@
         <td><?php echo $user->username ?></td>
         <td><?php echo $user->fullname ?></td>
         <td>
-        <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
+          <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
           <a class="btn btn-small btn-danger">Delete</a>
         </td>
       </tr>

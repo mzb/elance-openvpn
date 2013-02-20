@@ -16,5 +16,5 @@ class User extends Model
 {
   public $username;
   public $fullname;
-  public $suspended = false;
+  public $suspended = 0;
 }
