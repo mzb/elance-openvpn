@@ -21,7 +21,7 @@
         <td><?php echo $user->fullname ?></td>
         <td>
           <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
-          <a class="btn btn-small btn-danger">Delete</a>
+          <a class="btn btn-small btn-danger" data-delete="Are you shure you want to delete user <?php echo $user->username ?>?" href="<?php echo $app->urlFor('users.delete', array('id' => $user->id)) ?>">Delete</a>
         </td>
       </tr>
     <?php endforeach ?>

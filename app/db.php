@@ -82,6 +82,12 @@ class DB
     return array();
   }
 
+  public function deleteUser($user)
+  {
+    self::exec('DELETE FROM users WHERE id = ?', array($user->id));
+  }
+
+
   private static function exec($sql, $bindings = array())
   {
     $stmt = self::$conn->prepare($sql);

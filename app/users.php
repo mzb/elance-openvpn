@@ -10,6 +10,7 @@ $users_index = function() use ($app) {
 
 $users_show = function($id) use ($app) {
   $user = DB::findUserById($id);
+  if (!$user) $app->notFound();
   $app->render('users/show.phtml', array(
     'user' => $user
   ));
@@ -17,6 +18,7 @@ $users_show = function($id) use ($app) {
 
 $users_update = function($id) use ($app) {
   $user = DB::findUserById($id);
+  if (!$user) $app->notFound();
   $user->fullname = $app->request()->params('fullname');
   DB::updateUser($user);
 
@@ -26,6 +28,7 @@ $users_update = function($id) use ($app) {
 
 $users_toggle_suspend = function($id) use ($app) {
   $user = DB::findUserById($id);
+  if (!$user) $app->notFound();
   $user->suspended = !$user->suspended;
   DB::updateUser($user);
 
@@ -38,6 +41,7 @@ $users_new = function() use ($app) {
   if ('POST' == $app->request()->getMethod()) {
     $user->username = $app->request()->params('username');
     $user->fullname = $app->request()->params('fullname');
+
     if (!($errors = DB::saveUser($user))) {
       $app->flash('success', 'User added');
       $app->redirect($app->urlFor('users'));
@@ -50,7 +54,13 @@ $users_new = function() use ($app) {
   ));
 };
 
-$users_create = function() use ($app) {
+$users_delete = function($id) use ($app) {
+  $user = DB::findUserById($id);
+  if (!$user) $app->notFound();
+  DB::deleteUser($user);
+
+  $app->flash('success', 'User deleted');
+  $app->redirect($app->urlFor('users'));
 };
 
 $app->get('/users', $section('users'), $users_index)->name('users');
@@ -58,4 +68,5 @@ $app->get('/users/new', $section('users'), $users_new)->name('users.new');
 $app->post('/users/new', $section('users'), $users_new)->name('users.create');
 $app->get('/users/:id', $section('users'), $users_show)->name('users.show');
 $app->post('/users/:id', $section('users'), $users_update)->name('users.update');
+$app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete');
 $app->post('/users/:id/toggle_suspend', $section('users'), $users_toggle_suspend)->name('users.toggle_suspend');
