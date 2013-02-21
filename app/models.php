@@ -31,22 +31,31 @@ class Group extends Model
 class AccessRule extends Model
 {
   public $address;
-  public $action;
-  public $position;
+  public $allow;
+  public $position = 0;
   public $owner_type;
   public $owner_id;
+
+  static function factory($type, $attrs = array())
+  {
+    $class = "{$type}AccessRule";
+    if (!class_exists($class)) {
+      throw new RuntimeException(sprintf('Unknown access rule type: %s', $class));
+    }
+    return new $class($attrs);
+  }
 }
 
 class HTTPAccessRule extends AccessRule
 {
-  public $http = 1;
-  public $https = 0;
+  public $http;
+  public $https;
 }
 
-class TCPAccessRule extends AccessRule
+class TCPUDPAccessRule extends AccessRule
 {
   public $port;
-  public $tcp = 1;
-  public $udp = 0;
+  public $tcp;
+  public $udp;
 }
 

@@ -130,6 +130,7 @@ $groups_show = function($id) use ($app) {
   $app->render('groups/show.phtml', array(
     'group' => Core::get_group($id),
     'members' => Core::get_group_members($id),
+    'http_rules' => Core::get_http_rules_for_group($id),
     'errors' => null
   ));
 };
@@ -175,13 +176,47 @@ $groups_delete = function($id) use ($app) {
   $app->redirect($app->urlFor('groups'));
 };
 
-
 $app->get('/groups', $section('groups'), $groups_index)->name('groups');
 $app->get('/groups/new', $section('groups'), $groups_new)->name('groups.new');
 $app->post('/groups/new', $section('groups'), $groups_new)->name('groups.create');
 $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
+
+$rules_form = function($type) use ($app) {
+  $app->view(new \Slim\View());
+
+  $app->render("rules/_{$type}_form.phtml", array(
+    'rule' => AccessRule::factory($type, array(
+      'owner_type' => $app->request()->params('owner_type'),
+      'owner_id' => $app->request()->params('owner_id')
+    )),
+    'app' => $app
+  ));
+};
+
+$http_rules_form = function() use ($rules_form) {
+  $rules_form('http');
+};
+
+$http_rules_save = function($id = null) use ($app) {
+  $req = $app->request();
+  Core::save_http_rule(
+    $id,
+    array(
+      'owner_type' => $req->params('owner_type'),
+      'owner_id' => $req->params('owner_id'),
+      'http' => $req->params('http'),
+      'https' => $req->params('https'),
+      'allow' => $req->params('allow'),
+      'address' => $req->params('address')
+    )
+  );
+};
+
+$app->get('/rules/http/form', $http_rules_form)->name('http_rules.form');
+$app->post('/rules/http/(:id)', $http_rules_save)->name('http_rules.save');
+$app->delete('/rules/http/:id', function() {})->name('http_rules.delete');
 
 
 return $app;

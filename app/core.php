@@ -152,6 +152,29 @@ class Core
     $group = self::get_group($id);
     DB::delete_group($group);
   }
+
+  static function save_http_rule($rule_id, array $attrs)
+  {
+    if ($rule_id) {
+      $rule = self::get_rule('http', $rule_id);
+    } else {
+      $rule = AccessRule::factory('http', $attrs);
+    }
+
+    DB::save_rule($rule);
+  }
+
+  static function get_http_rules_for_group($id)
+  {
+    return DB::find_rules_by_owner_id_and_owner_type('http', $id, 'Group');
+  }
+
+  static function get_rule($rule_type, $rule_id)
+  {
+    $rule = DB::find_rule_by_id($rule_type, $rule_id);
+    if (!$rule) throw new RecordNotFound($rule_id);
+    return $rule;
+  }
 }
 
 

@@ -145,6 +145,93 @@ class DB
     self::exec('DELETE FROM groups WHERE id = ?', array($group->id));
   }
 
+  public static function save_rule($rule)
+  {
+    if ($rule instanceof HTTPAccessRule) {
+      self::save_http_rule($rule);
+      return;
+    }
+
+    if ($rule instanceof TCPUDPAccessRule) {
+
+    }
+
+    throw new RuntimeException('Should not reach here');
+  }
+
+  public static function find_rules_by_owner_id_and_owner_type($rule_type, $owner_id, $owner_type)
+  {
+    $stmt = self::exec(<<<SQL
+      SELECT * FROM {$rule_type}_access_rules WHERE owner_id = ? AND owner_type = ? 
+      ORDER BY position
+SQL
+    , array($owner_id, $owner_type)
+    );
+
+    $rules = array();
+    while ($row = $stmt->fetch()) {
+      $rules[] = AccessRule::factory($rule_type, $row);
+    }
+
+    return $rules;
+  }
+
+  public static function save_http_rule($rule)
+  {
+    if ($rule->id) {
+      self::exec(<<<SQL
+        UPDATE http_access_rules SET
+          address = :address, 
+          allow = :allow, 
+          position = :position, 
+          owner_type = :owner_type, 
+          owner_id = :owner_id, 
+          http = :http, 
+          https = :https
+        WHERE id = :id
+SQL
+      , array(
+          ':address' => $rule->address,
+          ':allow' => $rule->allow,
+          ':position' => $rule->position,
+          ':owner_type' => $rule->owner_type,
+          ':owner_id' => $rule->owner_id,
+          ':http' => $rule->http,
+          ':https' => $rule->https,
+          ':id' => $rule->id
+        )
+      );
+    } else {
+      self::exec(<<<SQL
+        INSERT INTO http_access_rules (id, address, allow, position, owner_type, owner_id, http, https) 
+        VALUES (NULL, :address, :allow, :position, :owner_type, :owner_id, :http, :https) 
+SQL
+      , array(
+          ':address' => $rule->address,
+          ':allow' => $rule->allow,
+          ':position' => $rule->position,
+          ':owner_type' => $rule->owner_type,
+          ':owner_id' => $rule->owner_id,
+          ':http' => $rule->http,
+          ':https' => $rule->https
+        )
+      );
+    }
+  }
+
+  public static function find_rule_by_id($rule_type, $id)
+  {
+    $stmt = self::exec(
+      "SELECT * FROM {$rule_type}_access_rules WHERE id = ?",
+      array($id)
+    );
+    $rule = null;
+    if ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $rule = AccessRule::factory($rule_type, $row);
+    }
+    return $rule;
+  }
+
 
   private static function exec($sql, $bindings = array())
   {

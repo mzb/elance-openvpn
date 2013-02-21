@@ -1,0 +1,11 @@
+<table id="<?php echo $rule_owner_type ?>-http-rules" class="table table-condensed table-hover">
+  <tbody>
+    <?php foreach ($rules as $rule): ?>
+      <?php partial('rules/_http_form.phtml', array('rule' => $rule)) ?>
+    <?php endforeach ?>
+  </tbody>
+</table>
+
+<a data-action="add-rule" data-target="#<?php echo $rule_owner_type ?>-http-rules" 
+  href="<?php echo $app->urlFor('http_rules.form'), '?owner_type=', $rule_owner_type, '&owner_id=', $rule_owner_id ?>"
+  class="btn btn-success pull-right">Add rule</a>
