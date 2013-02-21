@@ -132,6 +132,20 @@ class Core
     if (!$group) throw new RecordNotFound($id);
     return $group;
   }
+
+  static function get_group_members($group_id)
+  {
+    return DB::find_users_by_group_id($group_id);
+  }
+
+  static function update_user_membership($user_id, $group_id)
+  {
+    $user = self::get_user($user_id);
+    if ($group_id) self::get_group($group_id);
+
+    $user->group_id = $group_id;
+    DB::update_user($user);
+  }
 }
 
 

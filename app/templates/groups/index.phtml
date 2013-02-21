@@ -1,29 +1,41 @@
+<ul class="breadcrumb">
+  <li><a href="<?php echo $app->urlFor('groups') ?>">Groups</a>
+</ul>
+
 <div class="page-header">
   <h3>List of groups</h3>
 </div>
 
 <a href="<?php echo $app->urlFor('groups.new') ?>" class="btn btn-success pull-right">Add group</a>
 
-<table class="table  table-condensed table-hover">
-  <thead>
-    <tr>
-      <th style="width: 8%">#</th>
-      <th style="width: 30%">Name</th>
-      <th style="width: 50%">Description</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($groups as $group): ?>
+<?php if ($groups): ?>
+  <table class="table  table-condensed table-hover">
+    <thead>
       <tr>
-        <td><?php echo $group->id ?></td>
-        <td><?php echo $group->name ?></td>
-        <td><?php echo $group->description ?></td>
-        <td>
-          <a class="btn btn-small" href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>">Edit</a>
-          <a class="btn btn-small btn-danger" data-delete="Are you shure you want to delete group <?php echo $group->name ?>?" href="<?php echo $app->urlFor('groups.delete', array('id' => $group->id)) ?>">Delete</a>
-        </td>
+        <th style="width: 8%">#</th>
+        <th style="width: 30%">Name</th>
+        <th style="width: 50%">Description</th>
+        <th></th>
       </tr>
-    <?php endforeach ?>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <?php foreach ($groups as $group): ?>
+        <tr>
+          <td><?php echo $group->id ?></td>
+          <td>
+          <a href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>"><?php echo $group->name ?></a>
+          </td>
+          <td><?php echo $group->description ?></td>
+          <td>
+            <a class="btn btn-small" href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>">Edit</a>
+            <a class="btn btn-small btn-danger" data-delete="Are you shure you want to delete group <?php echo $group->name ?>?" href="<?php echo $app->urlFor('groups.delete', array('id' => $group->id)) ?>">Delete</a>
+          </td>
+        </tr>
+      <?php endforeach ?>
+    </tbody>
+  </table>
+<?php else: ?>
+  <div class="muted">
+    No groups
+  </div>
+<?php endif ?>

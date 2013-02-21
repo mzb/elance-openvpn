@@ -1,5 +1,5 @@
 <ul class="breadcrumb">
-  <li><a href="<?php echo $app->urlFor('groups') ?>">groups</a> <span class="divider">/</span></li>
+  <li><a href="<?php echo $app->urlFor('groups') ?>">Groups</a> <span class="divider">/</span></li>
   <li><a href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>"><?php echo $group->name ?></a></li>
 </ul>
 
@@ -13,3 +13,10 @@
     'group' => $group
   )) ?>
 </form>
+
+
+<div class="page-header">
+  <h4>Members</h4>
+</div>
+
+<?php partial('users/_list.phtml', array('users' => $members)) ?>

@@ -1,0 +1,29 @@
+<?php if ($users): ?>
+  <table class="table  table-condensed table-hover">
+    <thead>
+      <tr>
+        <th style="width: 8%">#</th>
+        <th style="width: 30%">Username</th>
+        <th style="width: 50%">Fullname</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach ($users as $user): ?>
+        <tr>
+          <td><?php echo $user->id ?></td>
+          <td><a href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>"><?php echo $user->username ?><a/></td>
+          <td><?php echo $user->fullname ?></td>
+          <td>
+            <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
+            <a class="btn btn-small btn-danger" data-delete="Are you shure you want to delete user <?php echo $user->username ?>?" href="<?php echo $app->urlFor('users.delete', array('id' => $user->id)) ?>">Delete</a>
+          </td>
+        </tr>
+      <?php endforeach ?>
+    </tbody>
+  </table>
+<?php else: ?>
+  <div class="muted">
+    No users
+  </div>
+<?php endif ?>

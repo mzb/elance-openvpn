@@ -17,6 +17,7 @@ class User extends Model
   public $username;
   public $fullname;
   public $suspended = 0;
+  public $group_id;
 }
 
 class Group extends Model

@@ -43,7 +43,8 @@ $users_index = function() use ($app) {
 
 $users_show = function($id) use ($app) {
   $app->render('users/show.phtml', array(
-    'user' => Core::get_user($id)
+    'user' => Core::get_user($id),
+    'groups' => Core::list_groups()
   ));
 };
 
@@ -101,6 +102,12 @@ $users_config = function($id, $os) use ($app) {
   /* readfile($config); */
 };
 
+$users_membership = function($id) use ($app) {
+  Core::update_user_membership($id, $app->request()->params('group_id'));
+  $app->flash('success', 'User group changed');
+  $app->redirect($app->urlFor('users.show', array('id' => $id)));
+};
+
 $app->get('/', $section('users'), $users_index);
 $app->get('/users', $section('users'), $users_index)->name('users');
 $app->get('/users/new', $section('users'), $users_new)->name('users.new');
@@ -110,6 +117,7 @@ $app->post('/users/:id', $section('users'), $users_update)->name('users.update')
 $app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete');
 $app->post('/users/:id/toggle_suspend', $section('users'), $users_toggle_suspend)->name('users.toggle_suspend');
 $app->get('/users/:id/config/:os', $section('users'), $users_config)->name('users.config');
+$app->post('/users/:id/membership', $section('users'), $users_membership)->name('users.membership');
 
 
 $groups_index = function() use ($app) {
@@ -121,7 +129,8 @@ $groups_index = function() use ($app) {
 $groups_show = function($id) use ($app) {
   $app->render('groups/show.phtml', array(
     'group' => Core::get_group($id),
-    'errors' => array()
+    'members' => Core::get_group_members($id),
+    'errors' => null
   ));
 };
 
@@ -136,10 +145,7 @@ $groups_update = function($id) use ($app, $groups_show) {
     $app->redirect($app->urlFor('groups.show', array('id' => $id)));
   }
 
-  $app->render('groups/show.phtml', array(
-    'group' => Core::get_group($id),
-    'errors' => $errors
-  ));
+  $groups_show($id);
 };
 
 $groups_new = function() use ($app) {

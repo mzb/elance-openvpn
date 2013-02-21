@@ -27,6 +27,16 @@ class DB
     return $users;
   }
 
+  public static function find_users_by_group_id($group_id)
+  {
+    $stmt = self::exec('SELECT * FROM users WHERE group_id = ?', array($group_id));
+    $users = array();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $users[] = new User($row);
+    }
+    return $users;
+  }
+
   public static function find_user_by_id($id)
   {
     $stmt = self::exec('SELECT * FROM users WHERE id = ?', array($id));
@@ -50,11 +60,13 @@ class DB
   public static function update_user($user)
   {
     self::exec(
-      'UPDATE users SET fullname = :fullname, suspended = :suspended WHERE id = :id',
+      'UPDATE users SET fullname = :fullname, suspended = :suspended, group_id = :group_id WHERE id = :id',
       array(
         ':fullname' => $user->fullname, 
         ':suspended' => $user->suspended, 
-        ':id' => $user->id)
+        ':group_id' => $user->group_id,
+        ':id' => $user->id
+      )
     );
   }
 

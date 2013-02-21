@@ -1,29 +1,11 @@
+<ul class="breadcrumb">
+  <li><a href="<?php echo $app->urlFor('users') ?>">Users</a>
+</ul>
+
 <div class="page-header">
   <h3>List of users</h3>
 </div>
 
 <a href="<?php echo $app->urlFor('users.new') ?>" class="btn btn-success pull-right">Add user</a>
 
-<table class="table  table-condensed table-hover">
-  <thead>
-    <tr>
-      <th style="width: 8%">#</th>
-      <th style="width: 30%">Username</th>
-      <th style="width: 50%">Fullname</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php foreach ($users as $user): ?>
-      <tr>
-        <td><?php echo $user->id ?></td>
-        <td><?php echo $user->username ?></td>
-        <td><?php echo $user->fullname ?></td>
-        <td>
-          <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
-          <a class="btn btn-small btn-danger" data-delete="Are you shure you want to delete user <?php echo $user->username ?>?" href="<?php echo $app->urlFor('users.delete', array('id' => $user->id)) ?>">Delete</a>
-        </td>
-      </tr>
-    <?php endforeach ?>
-  </tbody>
-</table>
+<?php partial('users/_list.phtml', array('users' => $users)) ?>

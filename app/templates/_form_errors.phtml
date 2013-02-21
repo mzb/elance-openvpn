@@ -1,8 +1,8 @@
-<?php if ($errors): ?>
+<?php if (isset($errors) && $errors): ?>
   <div class="alert alert-error">
     <strong class="alert-heading">Correct following issues</strong>
     <ul>
-    <?php foreach ($errors as $msg): ?>
+    <?php foreach ((array)$errors as $msg): ?>
       <li><?php echo $msg ?></li>
     <?php endforeach ?>
     </ul>
