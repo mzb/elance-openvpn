@@ -140,6 +140,11 @@ class DB
     );
   }
 
+  public static function delete_group($group)
+  {
+    self::exec('DELETE FROM groups WHERE id = ?', array($group->id));
+  }
+
 
   private static function exec($sql, $bindings = array())
   {

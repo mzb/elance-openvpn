@@ -146,6 +146,12 @@ class Core
     $user->group_id = $group_id;
     DB::update_user($user);
   }
+
+  static function delete_group($id)
+  {
+    $group = self::get_group($id);
+    DB::delete_group($group);
+  }
 }
 
 

@@ -8,4 +8,11 @@ $(function() {
     }
     return false;
   });
+
+  $('.flash.alert-success').each(function() {
+    var $this = $(this);
+    setTimeout(function() {
+      $this.alert('close');
+    }, 3000);
+  });
 });

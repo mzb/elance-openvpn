@@ -170,11 +170,8 @@ $groups_new = function() use ($app) {
 };
 
 $groups_delete = function($id) use ($app) {
-  $group = DB::findgroupById($id);
-  if (!$group) $app->notFound();
-  DB::deletegroup($group);
-
-  $app->flash('success', 'group deleted');
+  Core::delete_group($id);
+  $app->flash('success', 'Group deleted');
   $app->redirect($app->urlFor('groups'));
 };
 
