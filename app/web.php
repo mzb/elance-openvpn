@@ -135,7 +135,7 @@ $groups_show = function($id) use ($app) {
   ));
 };
 
-$groups_update = function($id) use ($app, $groups_show) {
+$groups_update = function($id) use ($app) {
   list($_, $errors) = Core::update_group(
     $id,
     $app->request()->params('name'),
@@ -146,7 +146,12 @@ $groups_update = function($id) use ($app, $groups_show) {
     $app->redirect($app->urlFor('groups.show', array('id' => $id)));
   }
 
-  $groups_show($id);
+  $app->render('groups/show.phtml', array(
+    'group' => Core::get_group($id),
+    'members' => Core::get_group_members($id),
+    'http_rules' => Core::get_http_rules_for_group($id),
+    'errors' => $errors
+  ));
 };
 
 $groups_new = function() use ($app) {
