@@ -85,11 +85,7 @@
     </span>
   <?php endif ?>
 
-  <?php foreach ($flash as $kind => $msg): ?>
-    <span class="flash control-group <?php echo $kind ?>">
-      <span class="help-inline"><?php echo $msg ?></span>
-    </span>
-  <?php endforeach ?>
+  <?php partial('_inline_flash.phtml', array('flash' => $flash)) ?>
 
 <?php if (isset($readonly)): ?>
   </div>

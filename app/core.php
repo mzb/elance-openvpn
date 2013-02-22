@@ -49,6 +49,7 @@ class Core
     $user = self::get_user($id);
     $user->suspended = !$user->suspended;
     DB::update_user($user);
+    return $user;
   }
 
   static function delete_user($id)

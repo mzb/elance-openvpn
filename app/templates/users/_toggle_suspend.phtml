@@ -1,0 +1,10 @@
+<?php if ($user->suspended): ?>
+  <a href="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>" 
+     data-action="users.toggleSuspend" class="btn btn-success">Unsuspend access</a>
+<?php else: ?>
+  <a href="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>"
+     data-action="users.toggleSuspend" class="btn btn-danger">Suspend access</a>
+<?php endif ?>
+
+<?php partial('_inline_flash.phtml', array('flash' => $flash)) ?>
+

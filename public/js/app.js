@@ -9,22 +9,6 @@ ovpn.hideFlashes = function() {
   });
 };
 
-$(function() {
-  $(document).ajaxSuccess(ovpn.hideFlashes);
-
-  $('a[data-delete]').on('click', function() {
-    var confirmMsg = $(this).data('delete');
-    if (!confirmMsg || confirm(confirmMsg)) {
-      var $f = $('<form action="' + this.href + '" method="post"/>').appendTo($(this).parent());
-      $f.append('<input type="hidden" name="_METHOD" value="DELETE">');
-      $f.submit();
-    }
-    return false;
-  });
-
-  ovpn.hideFlashes();
-});
-
 ovpn.rules = {};
 
 ovpn.rules.define = function() {
@@ -92,10 +76,36 @@ ovpn.rules.sortable = function(selector) {
   });
 };
 
+ovpn.users = {};
+
+ovpn.users.toggleSuspend = function() {
+  var $trigger = $(this);
+  $.post(this.href).done(function(data) {
+    $trigger.closest('.section').html(data); 
+  });
+  return false;
+};
+
 $(function() {
+  $(document).ajaxSuccess(ovpn.hideFlashes);
+
+  $('a[data-delete]').on('click', function() {
+    var confirmMsg = $(this).data('delete');
+    if (!confirmMsg || confirm(confirmMsg)) {
+      var $f = $('<form action="' + this.href + '" method="post"/>').appendTo($(this).parent());
+      $f.append('<input type="hidden" name="_METHOD" value="DELETE">');
+      $f.submit();
+    }
+    return false;
+  });
+
+  ovpn.hideFlashes();
+
   $('a[data-action="rules.define"]').on('click', ovpn.rules.define);
   $(document).on('click','a[data-action="rules.cancel"]', ovpn.rules.cancel);
   $(document).on('click', 'a[data-action="rules.remove"]', ovpn.rules.remove);
   $(document).on('submit', 'form[name="rule"]', ovpn.rules.save);
   ovpn.rules.sortable('.rules ul');
+
+  $(document).on('click', 'a[data-action="users.toggleSuspend"]', ovpn.users.toggleSuspend);
 });

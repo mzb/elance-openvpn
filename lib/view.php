@@ -34,7 +34,7 @@ function partial($template, $data = array())
 {
   $data['app'] = \Slim\Slim::getInstance();
   $data['params'] = $data['app']->request()->params();
-  $data['flash'] = array();
+  if (!isset($data['flash'])) $data['flash'] = array();
   extract($data);
   require \Slim\Slim::getInstance()->config('templates.path') . '/' . $template;
 }

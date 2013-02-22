@@ -91,13 +91,9 @@
   <h4>OpenVPN settings</h4>
 </div>
 <div class="section">
-  <form class="form-inline" action="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>" method="post">
-    <?php if ($user->suspended): ?>
-      <button type="submit" class="btn btn-success">Unsuspend access</button>
-    <?php else: ?>
-      <button type="submit" class="btn btn-danger">Suspend access</button>
-    <?php endif ?>
-  </form>
+  <div class="section">
+    <?php partial('users/_toggle_suspend.phtml', array('user' => $user)) ?>
+  </div>
   <h5>Get config file(s)</h5>
   <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'win')) ?>" class="btn btn-large">for Windows</a>
   <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'osx')) ?>" class="btn btn-large">for Mac OS X</a>

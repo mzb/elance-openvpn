@@ -67,8 +67,12 @@ $users_update = function($id) use ($app) {
 };
 
 $users_toggle_suspend = function($id) use ($app) {
-  Core::toggle_user_suspend($id);
-  $app->redirect($app->urlFor('users.show', array('id' => $id)));
+  $user = Core::toggle_user_suspend($id);
+
+  $app->flashNow('success', $user->suspended ? 'User suspended' : 'User unsuspended');
+  $app->render('users/_toggle_suspend.phtml', array(
+    'user' => $user
+  ));
 };
 
 $users_new = function() use ($app) {
