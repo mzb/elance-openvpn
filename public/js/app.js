@@ -29,14 +29,16 @@ rules.cancel = function() {
   rules.resetNewForm($(this).closest('.new-rule')).hide();
   $(this).closest('.rules').find('a[data-action="rules.define"]').show();
   return false;
-}
+};
 
 rules.remove = function() {
   var $trigger = $(this);
-  $.post(this.href, {'_METHOD': 'DELETE'})
-    .done(function() {
-      $trigger.closest('li').fadeOut('fast', function() { $(this).remove() });
-    });
+  if (!$trigger.data('confirm') || confirm($trigger.data('confirm'))) {
+    $.post(this.href, {'_METHOD': 'DELETE'})
+      .done(function() {
+        $trigger.closest('li').fadeOut('fast', function() { $(this).remove(); });
+      });
+  }
   return false;
 };
 
@@ -48,7 +50,7 @@ rules.resetNewForm = function($container) {
     .removeAttr('checked')
     .removeAttr('selected');
   return $container;
-}
+};
 
 rules.save = function() {
   var $trigger = $(this);
@@ -73,11 +75,12 @@ rules.sortable = function(selector) {
     cursor: 'move',
     handle: '.sortable-handle',
     update: function(e, ui) {
-      // TODO
-      alert('Update!');
+      $.post($(this).data('sort-url'), $(this).sortable('serialize', {
+        attribute: 'data-id'
+      }));
     }
   });
-}
+};
 
 $(function() {
   $('a[data-action="rules.define"]').on('click', rules.define);

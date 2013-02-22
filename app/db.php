@@ -248,6 +248,18 @@ SQL
     return $rule;
   }
 
+  public static function update_rule_position($rule_type, $id, $position)
+  {
+    $table_name = null;
+    if ($rule_type === 'http') {
+      $table_name = 'http_access_rules';
+    } else {
+      $table_name = 'tcpudp_access_rules';
+    }
+    self::exec("UPDATE $table_name SET position = ? WHERE id = ?", 
+      array($position, $id));
+  }
+
 
   private static function exec($sql, $bindings = array())
   {

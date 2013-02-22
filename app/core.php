@@ -198,6 +198,13 @@ class Core
     if (!$rule) throw new RecordNotFound($rule_id);
     return $rule;
   }
+
+  static function sort_http_rules(array $ids)
+  {
+    foreach ($ids as $index => $id) {
+      DB::update_rule_position('http', $id, $index + 1);
+    }
+  }
 }
 
 

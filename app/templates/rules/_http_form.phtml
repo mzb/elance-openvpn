@@ -5,35 +5,45 @@
   <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
   <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
 
+  <?php if ($rule->id): ?>
+    <span class="control-group sortable-handle" title="Drag to change position" style="padding: 5px; margin-right: 10px">
+      <i class="icon-move"></i>
+    </span>
+  <?php endif ?>
+
   <span class="control-group <?php echo isset($errors['address']) ? 'error' : '' ?>">
     <input type="text" name="address" placeholder="Domain or IP" 
       value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" class="input-xlarge" 
       required>
   </span>
 
-  <select name="allow" class="input-small">
-    <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
-    <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
-  </select>
+  <span class="control-group">
+    <select name="allow" class="input-small">
+      <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
+      <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
+    </select>
+  </span>
 
-  <label for="http-<?php echo $rule->id ?>" class="checkbox">
-    <input type="checkbox" name="http" value="1" 
-      <?php echo $rule->http ? 'checked' : '' ?> id="http-<?php echo $rule->id ?>">
-    HTTP
-  </label>
-  <label for="https-<?php echo $rule->id ?>" class="checkbox">
-    <input type="checkbox" name="https" value="1" 
-      <?php echo $rule->https ? 'checked' : '' ?> id="https-<?php echo $rule->id ?>">
-    HTTPS
-  </label>
+  <span class="control-group">
+    <label for="http-<?php echo $rule->id ?>" class="checkbox">
+      <input type="checkbox" name="http" value="1" 
+        <?php echo $rule->http ? 'checked' : '' ?> id="http-<?php echo $rule->id ?>">
+      HTTP
+    </label>
+    <label for="https-<?php echo $rule->id ?>" class="checkbox">
+      <input type="checkbox" name="https" value="1" 
+        <?php echo $rule->https ? 'checked' : '' ?> id="https-<?php echo $rule->id ?>">
+      HTTPS
+    </label>
+  </span>
 
   <span class="control-group" style="margin-left: 10px">
     <?php if ($rule->id): ?>
       <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
-      <a class="btn btn-small btn-danger" data-action="rules.remove"
+      <a data-action="rules.remove" data-confirm="Are you sure you want ot delete this rule?"
         href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
-        title="Delete rule">&times</a>
-      <span class="sortable-handle">[DRAG]</span>
+        title="Delete rule" 
+        class="btn btn-small btn-danger" style="margin-left: 10px"><i class="icon-remove"></i></a>
     <?php else: ?>
       <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
       or <a href="#" data-action="rules.cancel">Cancel</a>

@@ -1,13 +1,15 @@
 <div class="rules">
-  <ul class="unstyled sortable">
+  <ul class="unstyled sortable" 
+      data-sort-url="<?php echo $app->urlFor('http_rules.sort') ?>">
     <?php foreach ($rules as $rule): ?>
-    <li>
+    <li data-id="rule-<?php echo $rule->id ?>">
       <?php partial('rules/_http_form.phtml', array('rule' => $rule)) ?>
     </li>
     <?php endforeach ?>
   </ul>
 
   <div class="new-rule" style="display: none">
+    <h5 class="muted">Define rule</h5>
     <?php partial('rules/_http_form.phtml', array('rule' => new HTTPAccessRule(array(
       'owner_type' => $rule_owner_type,
       'owner_id' => $rule_owner_id

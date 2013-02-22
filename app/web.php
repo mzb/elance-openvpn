@@ -217,9 +217,14 @@ $http_rules_delete = function($id) use ($app) {
   Core::delete_http_rule($id);
 };
 
-$app->post('/rules/http', $http_rules_save)->name('http_rules.create');
+$http_rules_sort = function() use ($app) {
+  Core::sort_http_rules((array) $app->request()->params('rule'));
+};
+
+$app->post('/rules/http/sort', $http_rules_sort)->name('http_rules.sort');
 $app->post('/rules/http/:id', $http_rules_save)->name('http_rules.update');
 $app->delete('/rules/http/:id', $http_rules_delete)->name('http_rules.delete');
+$app->post('/rules/http', $http_rules_save)->name('http_rules.create');
 
 
 return $app;
