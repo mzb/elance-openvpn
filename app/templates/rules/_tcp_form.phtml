@@ -1,64 +1,98 @@
-<form name="rule" 
+<?php if (isset($readonly)): ?>
+  <div class="form-inline <?php echo isset($disabled) ? 'muted' : '' ?>">
+<?php else: ?>
+  <form name="rule" 
   action="<?php echo $app->urlFor($rule->id ? 'tcp_rules.update' : 'tcp_rules.create', array('id' => $rule->id)) ?>" 
   method="post" class="form-inline" style="display: inline-block">
+<?php endif ?>
 
-  <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
-  <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
+  <?php if (!isset($readonly)): ?>
+    <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
+    <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
+  <?php endif ?>
 
-  <?php if ($rule->id): ?>
+  <?php if ($rule->id && !isset($readonly)): ?>
     <span class="control-group sortable-handle" title="Drag to change position" style="padding: 5px; margin-right: 10px">
       <i class="icon-move"></i>
     </span>
   <?php endif ?>
 
   <span class="control-group <?php echo isset($errors['address']) ? 'error' : '' ?>">
-    <input type="text" name="address" placeholder="Domain or IP" 
-      value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
-      class="input-xlarge" 
-      required <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>
-  </span>
-  <span class="control-group <?php echo isset($errors['port']) ? 'error' : '' ?>">
-    <input type="text" name="port" placeholder="Port"
-      value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
-      class="input-mini">
-  </span>
-
-  <span class="control-group">
-    <select name="allow" class="input-small">
-      <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
-      <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
-    </select>
-  </span>
-
-  <span class="control-group">
-    <label for="tcp-<?php echo $rule->id ?>" class="checkbox">
-      <input type="checkbox" name="tcp" value="1" 
-        <?php echo $rule->tcp ? 'checked' : '' ?> id="tcp-<?php echo $rule->id ?>">
-      TCP
-    </label>
-    <label for="udp-<?php echo $rule->id ?>" class="checkbox">
-      <input type="checkbox" name="udp" value="1" 
-        <?php echo $rule->udp ? 'checked' : '' ?> id="udp-<?php echo $rule->id ?>">
-      UDP
-    </label>
-  </span>
-
-  <span class="control-group" style="margin-left: 10px">
-    <?php if ($rule->id): ?>
-      <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
-      <a data-action="rules.remove" data-confirm="Are you sure you want ot delete this rule?"
-        href="<?php echo $app->urlFor('tcp_rules.delete', array('id' => $rule->id)) ?>"
-        title="Delete rule" 
-        class="btn btn-small btn-danger" style="margin-left: 10px"><i class="icon-remove"></i></a>
+    <?php if (isset($readonly)): ?>
+      <span class="input input-xlarge"><?php echo $rule->address ?></span>
     <?php else: ?>
-      <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
-      or <a href="#" data-action="rules.cancel">Cancel</a>
+      <input type="text" name="address" placeholder="Domain or IP" 
+        value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
+        class="input-xlarge" 
+        required 
+        <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>
     <?php endif ?>
   </span>
+
+  <span class="control-group <?php echo isset($errors['port']) ? 'error' : '' ?>">
+    <?php if (isset($readonly)): ?>
+      <span class="input input-mini"><?php echo $rule->port ?></span>
+    <?php else: ?>
+      <input type="text" name="port" placeholder="Port"
+        value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
+        class="input-mini">
+    <?php endif ?>
+  </span>
+
+  <span class="control-group">
+    <?php if (isset($readonly)): ?>
+      <span class="input input-small"><?php echo $rule->allow ? 'Allow' : 'Deny' ?></span>
+    <?php else: ?>
+      <select name="allow" class="input-small">
+        <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
+        <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
+      </select>
+    <?php endif ?>
+  </span>
+
+  <span class="control-group">
+    <?php if (isset($readonly)): ?>
+      <span class="input">
+        <i class="icon-<?php echo $rule->tcp ? 'ok' : 'remove' ?>"></i> TCP
+        <i class="icon-<?php echo $rule->udp ? 'ok' : 'remove' ?>"></i> UDP
+      </span>
+    <?php else: ?>
+      <label for="tcp-<?php echo $rule->id ?>" class="checkbox">
+        <input type="checkbox" name="tcp" value="1" 
+          <?php echo $rule->tcp ? 'checked' : '' ?> id="tcp-<?php echo $rule->id ?>">
+        TCP
+      </label>
+      <label for="udp-<?php echo $rule->id ?>" class="checkbox">
+        <input type="checkbox" name="udp" value="1" 
+          <?php echo $rule->udp ? 'checked' : '' ?> id="udp-<?php echo $rule->id ?>">
+        UDP
+      </label>
+    <?php endif ?>
+  </span>
+
+  <?php if (!isset($readonly)): ?>
+    <span class="control-group" style="margin-left: 10px">
+      <?php if ($rule->id): ?>
+        <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
+        <a data-action="rules.remove" data-confirm="Are you sure you want ot delete this rule?"
+          href="<?php echo $app->urlFor('tcp_rules.delete', array('id' => $rule->id)) ?>"
+          title="Delete rule" 
+          class="btn btn-small btn-danger" style="margin-left: 10px"><i class="icon-remove"></i></a>
+      <?php else: ?>
+        <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
+        or <a href="#" data-action="rules.cancel">Cancel</a>
+      <?php endif ?>
+    </span>
+  <?php endif ?>
 
   <?php foreach ($flash as $kind => $msg): ?>
     <span class="flash control-group <?php echo $kind ?>">
       <span class="help-inline"><?php echo $msg ?></span>
     </span>
   <?php endforeach ?>
-</form>
+
+<?php if (isset($readonly)): ?>
+  </div>
+<?php else: ?>
+  </form>
+<?php endif ?>

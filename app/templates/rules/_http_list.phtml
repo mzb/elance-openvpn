@@ -1,22 +1,30 @@
-<div class="rules">
+<div class="rules" id="http-rules">
   <ul class="unstyled sortable" 
       data-sort-url="<?php echo $app->urlFor('http_rules.sort') ?>">
     <?php foreach ($rules as $rule): ?>
     <li data-id="rule-<?php echo $rule->id ?>">
-      <?php partial('rules/_http_form.phtml', array('rule' => $rule)) ?>
+      <?php partial('rules/_http_form.phtml', array(
+        'rule' => $rule, 
+        'readonly' => isset($readonly) ? $readonly : null,
+        'disabled' => isset($disabled) ? $disabled : null
+      )) ?>
     </li>
     <?php endforeach ?>
   </ul>
 
-  <div class="new-rule" style="display: none">
-    <h5 class="muted">Define rule</h5>
-    <?php partial('rules/_http_form.phtml', array('rule' => new HTTPAccessRule(array(
-      'owner_type' => $rule_owner_type,
-      'owner_id' => $rule_owner_id
-    )))) ?>
-  </div>
+  <?php if (!isset($readonly)): ?>
+    <div class="new-rule" style="display: none">
+      <h5 class="muted">Define new rule</h5>
+      <div class="section">
+        <?php partial('rules/_http_form.phtml', array('rule' => new HTTPAccessRule(array(
+          'owner_type' => $rule_owner_type,
+          'owner_id' => $rule_owner_id
+        )))) ?>
+      </div>
+    </div>
 
-  <a data-action="rules.define" href="#" class="btn btn-success">Define rule</a> 
+    <a data-action="rules.define" href="#" class="btn btn-success">Define new rule</a> 
+  <?php endif ?>
 </div>
 
 

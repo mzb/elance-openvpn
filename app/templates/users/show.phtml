@@ -16,33 +16,89 @@
 <div class="page-header">
   <h4>Group membership</h4>
 </div>
+<div class="section">
+  <form class="form-inline" action="<?php echo $app->urlFor('users.membership', array('id' => $user->id)) ?>" method="post">
+    <label for="user-group" style="margin-right: 20px">Select group</label>
+    <select name="group_id" id="user-group">
+      <option value="">None</option>
+    <?php foreach ($groups as $group): ?>
+      <option value="<?php echo $group->id ?>" 
+        <?php echo $group->id == $user->group_id ? 'selected' : '' ?>><?php echo $group->name ?></option>
+    <?php endforeach ?>
+    </select>
+    <button type="submit" class="btn btn-primary">Save</button>
+  </form>
+</div>
 
-<form class="form-inline" action="<?php echo $app->urlFor('users.membership', array('id' => $user->id)) ?>" method="post">
-  <label for="user-group" style="margin-right: 20px">Select group</label>
-  <select name="group_id" id="user-group">
-    <option value="">None</option>
-  <?php foreach ($groups as $group): ?>
-    <option value="<?php echo $group->id ?>" 
-      <?php echo $group->id == $user->group_id ? 'selected' : '' ?>><?php echo $group->name ?></option>
-  <?php endforeach ?>
-  </select>
-  <button type="submit" class="btn btn-primary">Save</button>
-</form>
+<div class="page-header">
+  <h4>HTTP/HTTPS Rules</h4>
+</div>
+<div class="section">
+  <!-- HTTP/HTTPS rules inherited from group -->
+  <h5 class="muted">
+    Rules inherited from group
+    <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#http-rules"
+       class="btn btn-small">Edit</a>
+  </h5>
+  <?php partial('rules/_http_list.phtml', array(
+    'rules' => $http_group_rules,
+    'rule_owner_type' => 'Group',
+    'rule_owner_id' => $user->group_id,
+    'readonly' => true,
+    'disabled' => null
+  )) ?>
+  <!-- HTTP/HTTPS rules for this user -->
+  <h5 class="muted" style="margin-top: 20px;">Rules defined only for this user</h5>
+  <?php partial('rules/_http_list.phtml', array(
+    'rules' => $http_rules,
+    'rule_owner_type' => 'User',
+    'rule_owner_id' => $user->id,
+    'readonly' => $user->group_id > 0 ? true : null,
+    'disabled' => $user->group_id > 0 ? true : null,
+  )) ?>
+</div>
+
+<div class="page-header">
+  <h4>TCP/UDP Rules</h4>
+</div>
+<div class="section">
+  <!-- TCP/UDP rules inherited from group -->
+  <h5 class="muted">
+    Rules inherited from group
+    <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#tcp-rules"
+       class="btn btn-small">Edit</a>
+  </h5>
+  <?php partial('rules/_tcp_list.phtml', array(
+    'rules' => $tcp_group_rules,
+    'rule_owner_type' => 'Group',
+    'rule_owner_id' => $user->group_id,
+    'readonly' => true,
+    'disabled' => null
+  )) ?>
+  <!-- TCP/UDP rules for this user -->
+  <h5 class="muted" style="margin-top: 20px">Rules defined only for this user</h5>
+  <?php partial('rules/_tcp_list.phtml', array(
+    'rules' => $tcp_rules,
+    'rule_owner_type' => 'User',
+    'rule_owner_id' => $user->id,
+    'readonly' => $user->group_id > 0 ? true : null,
+    'disabled' => $user->group_id > 0 ? true : null,
+  )) ?>
+</div>
 
 <div class="page-header">
   <h4>OpenVPN settings</h4>
 </div>
-
-<form class="form-inline" action="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>" method="post">
-  <?php if ($user->suspended): ?>
-    <button type="submit" class="btn btn-success">Unsuspend access</button>
-  <?php else: ?>
-    <button type="submit" class="btn btn-danger">Suspend access</button>
-  <?php endif ?>
-</form>
-
-<h5>Get config file(s)</h5>
-
-<a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'win')) ?>" class="btn btn-large">for Windows</a>
-<a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'osx')) ?>" class="btn btn-large">for Mac OS X</a>
-<a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'lnx')) ?>" class="btn btn-large">for Linux</a>
+<div class="section">
+  <form class="form-inline" action="<?php echo $app->urlFor('users.toggle_suspend', array('id' => $user->id)) ?>" method="post">
+    <?php if ($user->suspended): ?>
+      <button type="submit" class="btn btn-success">Unsuspend access</button>
+    <?php else: ?>
+      <button type="submit" class="btn btn-danger">Suspend access</button>
+    <?php endif ?>
+  </form>
+  <h5>Get config file(s)</h5>
+  <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'win')) ?>" class="btn btn-large">for Windows</a>
+  <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'osx')) ?>" class="btn btn-large">for Mac OS X</a>
+  <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'lnx')) ?>" class="btn btn-large">for Linux</a>
+</div>

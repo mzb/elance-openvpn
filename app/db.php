@@ -232,7 +232,8 @@ SQL
           owner_type = :owner_type, 
           owner_id = :owner_id, 
           tcp = :tcp, 
-          udp = :udp
+          udp = :udp,
+          port = :port
         WHERE id = :id
 SQL
       , array(
@@ -243,13 +244,14 @@ SQL
           ':owner_id' => $rule->owner_id,
           ':tcp' => $rule->tcp,
           ':udp' => $rule->udp,
+          ':port' => $rule->port,
           ':id' => $rule->id
         )
       );
     } else {
       self::exec(<<<SQL
-        INSERT INTO tcpudp_access_rules (id, address, allow, position, owner_type, owner_id, tcp, udp) 
-        VALUES (NULL, :address, :allow, :position, :owner_type, :owner_id, :tcp, :udp) 
+        INSERT INTO tcpudp_access_rules (id, address, allow, position, owner_type, owner_id, tcp, udp, port) 
+        VALUES (NULL, :address, :allow, :position, :owner_type, :owner_id, :tcp, :udp, :port) 
 SQL
       , array(
           ':address' => $rule->address,
@@ -258,7 +260,8 @@ SQL
           ':owner_type' => $rule->owner_type,
           ':owner_id' => $rule->owner_id,
           ':tcp' => $rule->tcp,
-          ':udp' => $rule->udp
+          ':udp' => $rule->udp,
+          ':port' => $rule->port
         )
       );
 

@@ -49,8 +49,13 @@ $users_index = function() use ($app) {
 };
 
 $users_show = function($id) use ($app) {
+  $user = Core::get_user($id);
   $app->render('users/show.phtml', array(
-    'user' => Core::get_user($id),
+    'user' => $user,
+    'http_rules' => Core::get_http_rules_for_user($id),
+    'tcp_rules' => Core::get_tcp_rules_for_user($id),
+    'http_group_rules' => Core::get_http_rules_for_group($user->group_id),
+    'tcp_group_rules' => Core::get_tcp_rules_for_group($user->group_id),
     'groups' => Core::list_groups()
   ));
 };

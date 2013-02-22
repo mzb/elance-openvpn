@@ -193,6 +193,11 @@ class Core
     return DB::find_rules_by_owner_id_and_owner_type('http', $id, 'Group');
   }
 
+  static function get_http_rules_for_user($id)
+  {
+    return DB::find_rules_by_owner_id_and_owner_type('http', $id, 'User');
+  }
+
   static function get_rule($rule_type, $rule_id)
   {
     $rule = DB::find_rule_by_id($rule_type, $rule_id);
@@ -246,6 +251,11 @@ class Core
   static function get_tcp_rules_for_group($id)
   {
     return DB::find_rules_by_owner_id_and_owner_type('tcp', $id, 'Group');
+  }
+
+  static function get_tcp_rules_for_user($id)
+  {
+    return DB::find_rules_by_owner_id_and_owner_type('tcp', $id, 'User');
   }
 
   static function sort_tcp_rules(array $ids)
