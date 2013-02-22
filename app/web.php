@@ -14,12 +14,19 @@ session_start();
 
 $app = new \Slim\Slim(array(
   'templates.path' => __DIR__ . '/templates',
-  'view' => new LayoutView(),
   'debug' => false,
   'log.enabled' => true,
   'log.level' => \Slim\Log::DEBUG
 ));
-$app->view()->setLayout('layout.phtml');
+
+$app->hook('slim.before.dispatch', function() use ($app) {
+  if (!$app->request()->isXhr()) {
+    $app->view(new LayoutView());
+    $app->view()->setLayout('layout.phtml');
+  } else {
+    $app->view()->setData('app', $app);
+  }
+});
 
 $app->error(function($e) use ($app) {
   $app->getLog()->error($e);
@@ -188,30 +195,26 @@ $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
 
-$http_rules_create = function() use ($app) {
-  # Do not user layout
-  # TODO: move to before hook fo all Ajax requests + add $app to view data
-  $app->view(new \Slim\View());
-
+$http_rules_save = function($id = null) use ($app) {
   $req = $app->request();
-  list($rule, $errors) = Core::create_http_rule(
+  list($rule, $errors) = Core::save_http_rule(
     $req->params('owner_type'),
     $req->params('owner_id'),
     $req->params('http'),
     $req->params('https'),
     $req->params('allow'),
-    $req->params('address')
+    $req->params('address'),
+    $id
   );
 
   $app->render('rules/_http_form.phtml', array(
     'rule' => $rule,
     'errors' => $errors,
-    'app' => $app
   ), $errors ? 400 : 200);
 };
 
-$app->post('/rules/http', $http_rules_create)->name('http_rules.create');
-$app->post('/rules/http/:id', function(){})->name('http_rules.update');
+$app->post('/rules/http', $http_rules_save)->name('http_rules.create');
+$app->post('/rules/http/:id', $http_rules_save)->name('http_rules.update');
 $app->delete('/rules/http/:id', function(){})->name('http_rules.delete');
 
 

@@ -153,9 +153,14 @@ class Core
     DB::delete_group($group);
   }
 
-  static function create_http_rule($owner_type, $owner_id, $http, $https, $allow, $address)
+  static function save_http_rule($owner_type, $owner_id, $http, $https, $allow, $address, $id = null)
   {
+    if ($id) {
+      $rule = self::get_rule('http', $id);
+    }
+
     $rule = AccessRule::factory('http', array(
+      'id' => $id,
       'owner_type' => $owner_type, 
       'owner_id' => $owner_id, 
       'http' => $http, 

@@ -37,20 +37,27 @@ rules.remove = function() {
 };
 
 rules.resetNewForm = function($container) {
-  $container.
-    find('.control-group').removeClass('error').closest('form')[0].reset();
+  var $form = $container.find('.control-group').removeClass('error').closest('form');
+  $(':input', $form)
+    .not(':button, :submit, :reset, :hidden')
+    .val('')
+    .removeAttr('checked')
+    .removeAttr('selected');
   return $container;
 }
 
 rules.save = function() {
   var $trigger = $(this);
+  var createRule = $trigger.find(':submit')[0].name === 'create';
   $.post(this.action, $(this).serialize())
     .done(function(data) {
-      $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
-      rules.resetNewForm($trigger.closest('.new-rule'));
+      if (createRule) {
+        $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
+        rules.resetNewForm($trigger.closest('.new-rule'));
+      }
     })
     .error(function(data) {
-      $trigger.closest('.new-rule').html(data.responseText);
+      $trigger.closest(createRule ? '.new-rule' : 'li').html(data.responseText);
     });
   return false;
 };

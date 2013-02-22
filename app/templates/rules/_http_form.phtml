@@ -29,12 +29,12 @@
 
   <span style="margin-left: 10px">
   <?php if ($rule->id): ?>
-    <button type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
+    <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
     <a class="btn btn-small btn-danger" data-action="remove-rule"
       href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
       title="Delete rule">&times</a>
   <?php else: ?>
-      <button type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
+      <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
       or <a href="#" data-action="rules.cancel">Cancel</a>
   <?php endif ?>
   </span>
