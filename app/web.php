@@ -213,9 +213,13 @@ $http_rules_save = function($id = null) use ($app) {
   ), $errors ? 400 : 200);
 };
 
+$http_rules_delete = function($id) use ($app) {
+  Core::delete_http_rule($id);
+};
+
 $app->post('/rules/http', $http_rules_save)->name('http_rules.create');
 $app->post('/rules/http/:id', $http_rules_save)->name('http_rules.update');
-$app->delete('/rules/http/:id', function(){})->name('http_rules.delete');
+$app->delete('/rules/http/:id', $http_rules_delete)->name('http_rules.delete');
 
 
 return $app;

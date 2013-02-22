@@ -32,7 +32,11 @@ rules.cancel = function() {
 }
 
 rules.remove = function() {
-  $(this).closest('tr').remove();
+  var $trigger = $(this);
+  $.post(this.href, {'_METHOD': 'DELETE'})
+    .done(function() {
+      $trigger.closest('li').fadeOut('fast', function() { $(this).remove() });
+    });
   return false;
 };
 
@@ -62,9 +66,23 @@ rules.save = function() {
   return false;
 };
 
+rules.sortable = function(selector) {
+  $(selector).sortable({
+    // containment: 'parent',
+    axis: 'y',
+    cursor: 'move',
+    handle: '.sortable-handle',
+    update: function(e, ui) {
+      // TODO
+      alert('Update!');
+    }
+  });
+}
+
 $(function() {
   $('a[data-action="rules.define"]').on('click', rules.define);
   $(document).on('click','a[data-action="rules.cancel"]', rules.cancel);
   $(document).on('click', 'a[data-action="rules.remove"]', rules.remove);
   $(document).on('submit', 'form[name="rule"]', rules.save);
+  rules.sortable('.rules ul');
 });

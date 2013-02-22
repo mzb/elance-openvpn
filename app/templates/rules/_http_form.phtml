@@ -1,6 +1,6 @@
 <form name="rule" 
   action="<?php echo $app->urlFor($rule->id ? 'http_rules.update' : 'http_rules.create', array('id' => $rule->id)) ?>" 
-  method="post" class="form-inline">
+  method="post" class="form-inline" style="display: inline-block">
 
   <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
   <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
@@ -27,15 +27,16 @@
     HTTPS
   </label>
 
-  <span style="margin-left: 10px">
-  <?php if ($rule->id): ?>
-    <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
-    <a class="btn btn-small btn-danger" data-action="remove-rule"
-      href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
-      title="Delete rule">&times</a>
-  <?php else: ?>
+  <span class="control-group" style="margin-left: 10px">
+    <?php if ($rule->id): ?>
+      <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
+      <a class="btn btn-small btn-danger" data-action="rules.remove"
+        href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
+        title="Delete rule">&times</a>
+      <span class="sortable-handle">[DRAG]</span>
+    <?php else: ?>
       <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
       or <a href="#" data-action="rules.cancel">Cancel</a>
-  <?php endif ?>
+    <?php endif ?>
   </span>
 </form>

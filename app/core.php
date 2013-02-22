@@ -181,6 +181,12 @@ class Core
     return array($rule, $errors);
   }
 
+  static function delete_http_rule($id)
+  {
+    $rule = self::get_rule('http', $id);
+    DB::delete_rule($rule);
+  }
+
   static function get_http_rules_for_group($id)
   {
     return DB::find_rules_by_owner_id_and_owner_type('http', $id, 'Group');

@@ -153,7 +153,7 @@ class DB
     }
 
     if ($rule instanceof TCPUDPAccessRule) {
-
+      return;
     }
 
     throw new RuntimeException('Should not reach here');
@@ -221,6 +221,18 @@ SQL
       $query = self::exec('SELECT last_insert_rowid() FROM http_access_rules');
       $rule->id = intval($query->fetchColumn());
     }
+  }
+
+  public static function delete_rule($rule)
+  {
+    $table_name = null;
+    if ($rule instanceof HTTPAccessRule) {
+      $table_name = 'http_access_rules';
+    }
+    if ($rule instanceof TCPUDPAccessRule) {
+      $table_name = 'tcpudp_access_rules';
+    }
+    self::exec("DELETE FROM {$table_name } WHERE id = ?", array($rule->id));
   }
 
   public static function find_rule_by_id($rule_type, $id)
