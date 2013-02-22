@@ -1,11 +1,20 @@
-<table id="<?php echo $rule_owner_type ?>-http-rules" class="table table-condensed table-hover">
-  <tbody>
+<div class="rules">
+  <ul class="unstyled">
     <?php foreach ($rules as $rule): ?>
+    <li>
       <?php partial('rules/_http_form.phtml', array('rule' => $rule)) ?>
+    </li>
     <?php endforeach ?>
-  </tbody>
-</table>
+  </ul>
 
-<a data-action="add-rule" data-target="#<?php echo $rule_owner_type ?>-http-rules" 
-  href="<?php echo $app->urlFor('http_rules.form'), '?owner_type=', $rule_owner_type, '&owner_id=', $rule_owner_id ?>"
-  class="btn btn-success pull-right">Add rule</a>
+  <div class="new-rule" style="display: none">
+    <?php partial('rules/_http_form.phtml', array('rule' => new HTTPAccessRule(array(
+      'owner_type' => $rule_owner_type,
+      'owner_id' => $rule_owner_id
+    )))) ?>
+  </div>
+
+  <a data-action="rules.define" href="#" class="btn btn-success">Define rule</a> 
+</div>
+
+

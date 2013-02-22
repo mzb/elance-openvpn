@@ -19,28 +19,45 @@ $(function() {
 
 var rules = {};
 
-rules.add = function() {
-  var $target = $($(this).data('target'));
-  $.get(this.href).done(function(data) {
-    $target.find('tbody').append(data);
-  });
+rules.define = function() {
+  var $target = $(this).closest('.rules').find('.new-rule').show();
+  $(this).hide();
   return false;
 };
+
+rules.cancel = function() {
+  rules.resetNewForm($(this).closest('.new-rule')).hide();
+  $(this).closest('.rules').find('a[data-action="rules.define"]').show();
+  return false;
+}
 
 rules.remove = function() {
   $(this).closest('tr').remove();
   return false;
 };
 
+rules.resetNewForm = function($container) {
+  $container.
+    find('.control-group').removeClass('error').closest('form')[0].reset();
+  return $container;
+}
+
 rules.save = function() {
-  $.post(this.action, $(this).serialize()).done(function() {
-    alert('Saved!');
-  });
+  var $trigger = $(this);
+  $.post(this.action, $(this).serialize())
+    .done(function(data) {
+      $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
+      rules.resetNewForm($trigger.closest('.new-rule'));
+    })
+    .error(function(data) {
+      $trigger.closest('.new-rule').html(data.responseText);
+    });
   return false;
 };
 
 $(function() {
-  $('a[data-action="add-rule"]').on('click', rules.add);
-  $(document).on('click', 'a[data-action="remove-rule"]', rules.remove);
+  $('a[data-action="rules.define"]').on('click', rules.define);
+  $(document).on('click','a[data-action="rules.cancel"]', rules.cancel);
+  $(document).on('click', 'a[data-action="rules.remove"]', rules.remove);
   $(document).on('submit', 'form[name="rule"]', rules.save);
 });

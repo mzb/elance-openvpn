@@ -1,36 +1,41 @@
-<tr>
-  <form name="rule" action="<?php echo $app->urlFor('http_rules.save', array('id' => $rule->id)) ?>" method="post">
-    <td class="input-xlarge">
-      <input type="text" name="address" placeholder="Domain or IP" 
-        value="<?php echo $rule->address ?>" class="input-xlarge">
-    </td>
-    <td class="input-small">
-      <select name="allow" class="input-small">
-        <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
-        <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
-      </select>
-    </td>
-    <td class="input-medium">
-      <label for="http-<?php echo $rule->id ?>" class="checkbox inline">
-        <input type="checkbox" name="http" value="1" 
-          <?php echo $rule->http ? 'checked' : '' ?> id="http-<?php echo $rule->id ?>">
-        HTTP
-      </label>
-      <label for="https-<?php echo $rule->id ?>" class="checkbox inline">
-        <input type="checkbox" name="https" value="1" 
-          <?php echo $rule->https ? 'checked' : '' ?> id="https-<?php echo $rule->id ?>">
-        HTTPS
-      </label>
-    </td>
-    <td>
-      <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
-      <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
-      <button type="submit" class="btn btn-small btn-primary" text="Save changes">Save</button>
-    </td>
-  </form>
-  <td style="width: 30px">
+<form name="rule" 
+  action="<?php echo $app->urlFor($rule->id ? 'http_rules.update' : 'http_rules.create', array('id' => $rule->id)) ?>" 
+  method="post" class="form-inline">
+
+  <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
+  <input type="hidden" name="owner_id" value="<?php echo $rule->owner_id ?>">
+
+  <span class="control-group <?php echo isset($errors['address']) ? 'error' : '' ?>">
+    <input type="text" name="address" placeholder="Domain or IP" 
+      value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" class="input-xlarge" 
+      required>
+  </span>
+
+  <select name="allow" class="input-small">
+    <option value="1" <?php echo $rule->allow ? 'selected' : '' ?>>Allow</option>
+    <option value="0" <?php echo $rule->allow ? '' : 'selected' ?>>Deny</option>
+  </select>
+
+  <label for="http-<?php echo $rule->id ?>" class="checkbox">
+    <input type="checkbox" name="http" value="1" 
+      <?php echo $rule->http ? 'checked' : '' ?> id="http-<?php echo $rule->id ?>">
+    HTTP
+  </label>
+  <label for="https-<?php echo $rule->id ?>" class="checkbox">
+    <input type="checkbox" name="https" value="1" 
+      <?php echo $rule->https ? 'checked' : '' ?> id="https-<?php echo $rule->id ?>">
+    HTTPS
+  </label>
+
+  <span style="margin-left: 10px">
+  <?php if ($rule->id): ?>
+    <button type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
     <a class="btn btn-small btn-danger" data-action="remove-rule"
       href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
-      text="Delete rule">&times</a>
-  </td>
-</tr>
+      title="Delete rule">&times</a>
+  <?php else: ?>
+      <button type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
+      or <a href="#" data-action="rules.cancel">Cancel</a>
+  <?php endif ?>
+  </span>
+</form>

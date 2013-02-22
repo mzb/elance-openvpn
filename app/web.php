@@ -111,7 +111,7 @@ $users_membership = function($id) use ($app) {
 $app->get('/', $section('users'), $users_index);
 $app->get('/users', $section('users'), $users_index)->name('users');
 $app->get('/users/new', $section('users'), $users_new)->name('users.new');
-$app->post('/users/new', $section('users'), $users_new)->name('users.create');
+$app->post('/users', $section('users'), $users_new)->name('users.create');
 $app->get('/users/:id', $section('users'), $users_show)->name('users.show');
 $app->post('/users/:id', $section('users'), $users_update)->name('users.update');
 $app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete');
@@ -183,45 +183,36 @@ $groups_delete = function($id) use ($app) {
 
 $app->get('/groups', $section('groups'), $groups_index)->name('groups');
 $app->get('/groups/new', $section('groups'), $groups_new)->name('groups.new');
-$app->post('/groups/new', $section('groups'), $groups_new)->name('groups.create');
+$app->post('/groups', $section('groups'), $groups_new)->name('groups.create');
 $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
 
-$rules_form = function($type) use ($app) {
+$http_rules_create = function() use ($app) {
+  # Do not user layout
+  # TODO: move to before hook fo all Ajax requests + add $app to view data
   $app->view(new \Slim\View());
 
-  $app->render("rules/_{$type}_form.phtml", array(
-    'rule' => AccessRule::factory($type, array(
-      'owner_type' => $app->request()->params('owner_type'),
-      'owner_id' => $app->request()->params('owner_id')
-    )),
-    'app' => $app
-  ));
-};
-
-$http_rules_form = function() use ($rules_form) {
-  $rules_form('http');
-};
-
-$http_rules_save = function($id = null) use ($app) {
   $req = $app->request();
-  Core::save_http_rule(
-    $id,
-    array(
-      'owner_type' => $req->params('owner_type'),
-      'owner_id' => $req->params('owner_id'),
-      'http' => $req->params('http'),
-      'https' => $req->params('https'),
-      'allow' => $req->params('allow'),
-      'address' => $req->params('address')
-    )
+  list($rule, $errors) = Core::create_http_rule(
+    $req->params('owner_type'),
+    $req->params('owner_id'),
+    $req->params('http'),
+    $req->params('https'),
+    $req->params('allow'),
+    $req->params('address')
   );
+
+  $app->render('rules/_http_form.phtml', array(
+    'rule' => $rule,
+    'errors' => $errors,
+    'app' => $app
+  ), $errors ? 400 : 200);
 };
 
-$app->get('/rules/http/form', $http_rules_form)->name('http_rules.form');
-$app->post('/rules/http/(:id)', $http_rules_save)->name('http_rules.save');
-$app->delete('/rules/http/:id', function() {})->name('http_rules.delete');
+$app->post('/rules/http', $http_rules_create)->name('http_rules.create');
+$app->post('/rules/http/:id', function(){})->name('http_rules.update');
+$app->delete('/rules/http/:id', function(){})->name('http_rules.delete');
 
 
 return $app;

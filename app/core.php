@@ -153,15 +153,27 @@ class Core
     DB::delete_group($group);
   }
 
-  static function save_http_rule($rule_id, array $attrs)
+  static function create_http_rule($owner_type, $owner_id, $http, $https, $allow, $address)
   {
-    if ($rule_id) {
-      $rule = self::get_rule('http', $rule_id);
-    } else {
-      $rule = AccessRule::factory('http', $attrs);
+    $rule = AccessRule::factory('http', array(
+      'owner_type' => $owner_type, 
+      'owner_id' => $owner_id, 
+      'http' => $http, 
+      'https' => $https, 
+      'allow' => $allow, 
+      'address' => $address
+    ));
+
+    $errors = array();
+    if (!trim($rule->address)) {
+      $errors['address'] = 'Cannot be blank';
     }
 
-    DB::save_rule($rule);
+    if (!$errors) {
+      DB::save_rule($rule);
+    }
+
+    return array($rule, $errors);
   }
 
   static function get_http_rules_for_group($id)

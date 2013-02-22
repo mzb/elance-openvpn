@@ -216,6 +216,10 @@ SQL
           ':https' => $rule->https
         )
       );
+
+      # Fetch new ID
+      $query = self::exec('SELECT last_insert_rowid() FROM http_access_rules');
+      $rule->id = intval($query->fetchColumn());
     }
   }
 
