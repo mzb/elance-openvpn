@@ -1,5 +1,5 @@
 <form name="rule" 
-  action="<?php echo $app->urlFor($rule->id ? 'http_rules.update' : 'http_rules.create', array('id' => $rule->id)) ?>" 
+  action="<?php echo $app->urlFor($rule->id ? 'tcp_rules.update' : 'tcp_rules.create', array('id' => $rule->id)) ?>" 
   method="post" class="form-inline" style="display: inline-block">
 
   <input type="hidden" name="owner_type" value="<?php echo $rule->owner_type ?>">
@@ -13,8 +13,14 @@
 
   <span class="control-group <?php echo isset($errors['address']) ? 'error' : '' ?>">
     <input type="text" name="address" placeholder="Domain or IP" 
-      value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" class="input-xlarge" 
-      required>
+      value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
+      class="input-xlarge" 
+      required <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>
+  </span>
+  <span class="control-group <?php echo isset($errors['port']) ? 'error' : '' ?>">
+    <input type="text" name="port" placeholder="Port"
+      value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
+      class="input-mini">
   </span>
 
   <span class="control-group">
@@ -25,15 +31,15 @@
   </span>
 
   <span class="control-group">
-    <label for="http-<?php echo $rule->id ?>" class="checkbox">
-      <input type="checkbox" name="http" value="1" 
-        <?php echo $rule->http ? 'checked' : '' ?> id="http-<?php echo $rule->id ?>">
-      HTTP
+    <label for="tcp-<?php echo $rule->id ?>" class="checkbox">
+      <input type="checkbox" name="tcp" value="1" 
+        <?php echo $rule->tcp ? 'checked' : '' ?> id="tcp-<?php echo $rule->id ?>">
+      TCP
     </label>
-    <label for="https-<?php echo $rule->id ?>" class="checkbox">
-      <input type="checkbox" name="https" value="1" 
-        <?php echo $rule->https ? 'checked' : '' ?> id="https-<?php echo $rule->id ?>">
-      HTTPS
+    <label for="udp-<?php echo $rule->id ?>" class="checkbox">
+      <input type="checkbox" name="udp" value="1" 
+        <?php echo $rule->udp ? 'checked' : '' ?> id="udp-<?php echo $rule->id ?>">
+      UDP
     </label>
   </span>
 
@@ -41,7 +47,7 @@
     <?php if ($rule->id): ?>
       <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
       <a data-action="rules.remove" data-confirm="Are you sure you want ot delete this rule?"
-        href="<?php echo $app->urlFor('http_rules.delete', array('id' => $rule->id)) ?>"
+        href="<?php echo $app->urlFor('tcp_rules.delete', array('id' => $rule->id)) ?>"
         title="Delete rule" 
         class="btn btn-small btn-danger" style="margin-left: 10px"><i class="icon-remove"></i></a>
     <?php else: ?>

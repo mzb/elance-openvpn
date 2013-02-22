@@ -1,4 +1,17 @@
+var ovpn = ovpn || {};
+
+ovpn.hideFlashes = function() {
+  $('.flash.alert-success, .flash.success').each(function() {
+    var $this = $(this);
+    setTimeout(function() {
+      $this.fadeOut('fast', function() { $(this).remove(); });
+    }, 3000);
+  });
+};
+
 $(function() {
+  $(document).ajaxSuccess(ovpn.hideFlashes);
+
   $('a[data-delete]').on('click', function() {
     var confirmMsg = $(this).data('delete');
     if (!confirmMsg || confirm(confirmMsg)) {
@@ -9,29 +22,24 @@ $(function() {
     return false;
   });
 
-  $('.flash.alert-success').each(function() {
-    var $this = $(this);
-    setTimeout(function() {
-      $this.alert('close');
-    }, 3000);
-  });
+  ovpn.hideFlashes();
 });
 
-var rules = {};
+ovpn.rules = {};
 
-rules.define = function() {
+ovpn.rules.define = function() {
   var $target = $(this).closest('.rules').find('.new-rule').show();
   $(this).hide();
   return false;
 };
 
-rules.cancel = function() {
-  rules.resetNewForm($(this).closest('.new-rule')).hide();
+ovpn.rules.cancel = function() {
+  ovpn.rules.resetNewForm($(this).closest('.new-rule')).hide();
   $(this).closest('.rules').find('a[data-action="rules.define"]').show();
   return false;
 };
 
-rules.remove = function() {
+ovpn.rules.remove = function() {
   var $trigger = $(this);
   if (!$trigger.data('confirm') || confirm($trigger.data('confirm'))) {
     $.post(this.href, {'_METHOD': 'DELETE'})
@@ -42,7 +50,7 @@ rules.remove = function() {
   return false;
 };
 
-rules.resetNewForm = function($container) {
+ovpn.rules.resetNewForm = function($container) {
   var $form = $container.find('.control-group').removeClass('error').closest('form');
   $(':input', $form)
     .not(':button, :submit, :reset, :hidden')
@@ -52,14 +60,16 @@ rules.resetNewForm = function($container) {
   return $container;
 };
 
-rules.save = function() {
+ovpn.rules.save = function() {
   var $trigger = $(this);
   var createRule = $trigger.find(':submit')[0].name === 'create';
   $.post(this.action, $(this).serialize())
     .done(function(data) {
       if (createRule) {
         $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
-        rules.resetNewForm($trigger.closest('.new-rule'));
+        ovpn.rules.resetNewForm($trigger.closest('.new-rule'));
+      } else {
+        $trigger.closest('li').html(data);
       }
     })
     .error(function(data) {
@@ -68,7 +78,7 @@ rules.save = function() {
   return false;
 };
 
-rules.sortable = function(selector) {
+ovpn.rules.sortable = function(selector) {
   $(selector).sortable({
     // containment: 'parent',
     axis: 'y',
@@ -83,9 +93,9 @@ rules.sortable = function(selector) {
 };
 
 $(function() {
-  $('a[data-action="rules.define"]').on('click', rules.define);
-  $(document).on('click','a[data-action="rules.cancel"]', rules.cancel);
-  $(document).on('click', 'a[data-action="rules.remove"]', rules.remove);
-  $(document).on('submit', 'form[name="rule"]', rules.save);
-  rules.sortable('.rules ul');
+  $('a[data-action="rules.define"]').on('click', ovpn.rules.define);
+  $(document).on('click','a[data-action="rules.cancel"]', ovpn.rules.cancel);
+  $(document).on('click', 'a[data-action="rules.remove"]', ovpn.rules.remove);
+  $(document).on('submit', 'form[name="rule"]', ovpn.rules.save);
+  ovpn.rules.sortable('.rules ul');
 });

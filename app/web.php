@@ -138,6 +138,7 @@ $groups_show = function($id) use ($app) {
     'group' => Core::get_group($id),
     'members' => Core::get_group_members($id),
     'http_rules' => Core::get_http_rules_for_group($id),
+    'tcp_rules' => Core::get_tcp_rules_for_group($id),
     'errors' => null
   ));
 };
@@ -207,6 +208,12 @@ $http_rules_save = function($id = null) use ($app) {
     $id
   );
 
+  if ($errors) {
+    $app->flashNow('error', 'Incorrect values');
+  } else {
+    $app->flashNow('success', 'Saved!');
+  }
+
   $app->render('rules/_http_form.phtml', array(
     'rule' => $rule,
     'errors' => $errors,
@@ -221,10 +228,47 @@ $http_rules_sort = function() use ($app) {
   Core::sort_http_rules((array) $app->request()->params('rule'));
 };
 
+$tcp_rules_save = function($id = null) use ($app) {
+  $req = $app->request();
+  list($rule, $errors) = Core::save_tcp_rule(
+    $req->params('owner_type'),
+    $req->params('owner_id'),
+    $req->params('tcp'),
+    $req->params('udp'),
+    $req->params('allow'),
+    $req->params('address'),
+    $req->params('port'),
+    $id
+  );
+
+  if ($errors) {
+    $app->flashNow('error', 'Incorrect values');
+  } else {
+    $app->flashNow('success', 'Saved!');
+  }
+
+  $app->render('rules/_tcp_form.phtml', array(
+    'rule' => $rule,
+    'errors' => $errors,
+  ), $errors ? 400 : 200);
+};
+
+$tcp_rules_delete = function($id) use ($app) {
+  Core::delete_tcp_rule($id);
+};
+
+$tcp_rules_sort = function() use ($app) {
+  Core::sort_tcp_rules((array) $app->request()->params('rule'));
+};
+
 $app->post('/rules/http/sort', $http_rules_sort)->name('http_rules.sort');
 $app->post('/rules/http/:id', $http_rules_save)->name('http_rules.update');
 $app->delete('/rules/http/:id', $http_rules_delete)->name('http_rules.delete');
 $app->post('/rules/http', $http_rules_save)->name('http_rules.create');
+$app->post('/rules/tcp/sort', $tcp_rules_sort)->name('tcp_rules.sort');
+$app->post('/rules/tcp/:id', $tcp_rules_save)->name('tcp_rules.update');
+$app->delete('/rules/tcp/:id', $tcp_rules_delete)->name('tcp_rules.delete');
+$app->post('/rules/tcp', $tcp_rules_save)->name('tcp_rules.create');
 
 
 return $app;

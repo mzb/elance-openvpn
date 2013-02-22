@@ -25,6 +25,16 @@
 )) ?>
 
 <div class="page-header">
+  <h4>TCP/UDP Rules</h4>
+</div>
+
+<?php partial('rules/_tcp_list.phtml', array(
+  'rules' => $tcp_rules,
+  'rule_owner_type' => get_class($group),
+  'rule_owner_id' => $group->id
+)) ?>
+
+<div class="page-header">
   <h4>Members</h4>
 </div>
 

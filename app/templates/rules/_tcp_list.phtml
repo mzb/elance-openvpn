@@ -1,0 +1,20 @@
+<div class="rules">
+  <ul class="unstyled sortable" 
+      data-sort-url="<?php echo $app->urlFor('tcp_rules.sort') ?>">
+    <?php foreach ($rules as $rule): ?>
+    <li data-id="rule-<?php echo $rule->id ?>">
+      <?php partial('rules/_tcp_form.phtml', array('rule' => $rule)) ?>
+    </li>
+    <?php endforeach ?>
+  </ul>
+
+  <div class="new-rule" style="display: none">
+    <h5 class="muted">Define rule</h5>
+    <?php partial('rules/_tcp_form.phtml', array('rule' => new TCPAccessRule(array(
+      'owner_type' => $rule_owner_type,
+      'owner_id' => $rule_owner_id
+    )))) ?>
+  </div>
+
+  <a data-action="rules.define" href="#" class="btn btn-success">Define rule</a> 
+</div>

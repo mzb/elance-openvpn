@@ -52,7 +52,7 @@ class HTTPAccessRule extends AccessRule
   public $https;
 }
 
-class TCPUDPAccessRule extends AccessRule
+class TCPAccessRule extends AccessRule
 {
   public $port;
   public $tcp;

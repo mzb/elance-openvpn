@@ -148,12 +148,11 @@ class DB
   public static function save_rule($rule)
   {
     if ($rule instanceof HTTPAccessRule) {
-      self::save_http_rule($rule);
-      return;
+      return self::save_http_rule($rule);
     }
 
-    if ($rule instanceof TCPUDPAccessRule) {
-      return;
+    if ($rule instanceof TCPAccessRule) {
+      return self::save_tcp_rule($rule);
     }
 
     throw new RuntimeException('Should not reach here');
@@ -161,11 +160,10 @@ class DB
 
   public static function find_rules_by_owner_id_and_owner_type($rule_type, $owner_id, $owner_type)
   {
-    $stmt = self::exec(<<<SQL
-      SELECT * FROM {$rule_type}_access_rules WHERE owner_id = ? AND owner_type = ? 
-      ORDER BY position
-SQL
-    , array($owner_id, $owner_type)
+    $table_name = self::get_table_for_rule($rule_type);
+    $stmt = self::exec(
+      "SELECT * FROM $table_name WHERE owner_id = ? AND owner_type = ? ORDER BY position", 
+      array($owner_id, $owner_type)
     );
 
     $rules = array();
@@ -176,7 +174,7 @@ SQL
     return $rules;
   }
 
-  public static function save_http_rule($rule)
+  private static function save_http_rule($rule)
   {
     if ($rule->id) {
       self::exec(<<<SQL
@@ -223,22 +221,64 @@ SQL
     }
   }
 
+  private static function save_tcp_rule($rule)
+  {
+    if ($rule->id) {
+      self::exec(<<<SQL
+        UPDATE tcpudp_access_rules SET
+          address = :address, 
+          allow = :allow, 
+          position = :position, 
+          owner_type = :owner_type, 
+          owner_id = :owner_id, 
+          tcp = :tcp, 
+          udp = :udp
+        WHERE id = :id
+SQL
+      , array(
+          ':address' => $rule->address,
+          ':allow' => $rule->allow,
+          ':position' => $rule->position,
+          ':owner_type' => $rule->owner_type,
+          ':owner_id' => $rule->owner_id,
+          ':tcp' => $rule->tcp,
+          ':udp' => $rule->udp,
+          ':id' => $rule->id
+        )
+      );
+    } else {
+      self::exec(<<<SQL
+        INSERT INTO tcpudp_access_rules (id, address, allow, position, owner_type, owner_id, tcp, udp) 
+        VALUES (NULL, :address, :allow, :position, :owner_type, :owner_id, :tcp, :udp) 
+SQL
+      , array(
+          ':address' => $rule->address,
+          ':allow' => $rule->allow,
+          ':position' => $rule->position,
+          ':owner_type' => $rule->owner_type,
+          ':owner_id' => $rule->owner_id,
+          ':tcp' => $rule->tcp,
+          ':udp' => $rule->udp
+        )
+      );
+
+      # Fetch new ID
+      $query = self::exec('SELECT last_insert_rowid() FROM tcpudp_access_rules');
+      $rule->id = intval($query->fetchColumn());
+    }
+  }
+
   public static function delete_rule($rule)
   {
-    $table_name = null;
-    if ($rule instanceof HTTPAccessRule) {
-      $table_name = 'http_access_rules';
-    }
-    if ($rule instanceof TCPUDPAccessRule) {
-      $table_name = 'tcpudp_access_rules';
-    }
+    $table_name = self::get_table_for_rule($rule);
     self::exec("DELETE FROM {$table_name } WHERE id = ?", array($rule->id));
   }
 
   public static function find_rule_by_id($rule_type, $id)
-  {
+  { 
+    $table_name = self::get_table_for_rule($rule_type);
     $stmt = self::exec(
-      "SELECT * FROM {$rule_type}_access_rules WHERE id = ?",
+      "SELECT * FROM $table_name WHERE id = ?",
       array($id)
     );
     $rule = null;
@@ -250,14 +290,21 @@ SQL
 
   public static function update_rule_position($rule_type, $id, $position)
   {
-    $table_name = null;
-    if ($rule_type === 'http') {
-      $table_name = 'http_access_rules';
-    } else {
-      $table_name = 'tcpudp_access_rules';
-    }
+    $table_name = self::get_table_for_rule($rule_type);
     self::exec("UPDATE $table_name SET position = ? WHERE id = ?", 
       array($position, $id));
+  }
+
+  private static function get_table_for_rule($rule)
+  {
+    if ($rule instanceof HTTPAccessRule || $rule === 'http') {
+      return 'http_access_rules';
+    }
+    if ($rule instanceof TCPAccessRule || $rule === 'tcp') {
+      return 'tcpudp_access_rules';
+    }
+    
+    return null;
   }
 
 

@@ -153,7 +153,8 @@ class Core
     DB::delete_group($group);
   }
 
-  static function save_http_rule($owner_type, $owner_id, $http, $https, $allow, $address, $id = null)
+  static function save_http_rule($owner_type, $owner_id, $http, $https, $allow, $address, 
+                                 $id = null)
   {
     if ($id) {
       $rule = self::get_rule('http', $id);
@@ -203,6 +204,54 @@ class Core
   {
     foreach ($ids as $index => $id) {
       DB::update_rule_position('http', $id, $index + 1);
+    }
+  }
+
+  static function save_tcp_rule($owner_type, $owner_id, $tcp, $udp, $allow, $address, 
+                                $port, $id = null)
+  {
+    if ($id) {
+      $rule = self::get_rule('tcp', $id);
+    }
+
+    $rule = AccessRule::factory('tcp', array(
+      'id' => $id,
+      'owner_type' => $owner_type, 
+      'owner_id' => $owner_id, 
+      'tcp' => $tcp, 
+      'udp' => $udp, 
+      'allow' => $allow, 
+      'address' => $address,
+      'port' => $port
+    ));
+
+    $errors = array();
+    if (!trim($rule->address)) {
+      $errors['address'] = 'Cannot be blank';
+    }
+
+    if (!$errors) {
+      DB::save_rule($rule);
+    }
+
+    return array($rule, $errors);
+  }
+
+  static function delete_tcp_rule($id)
+  {
+    $rule = self::get_rule('tcp', $id);
+    DB::delete_rule($rule);
+  }
+
+  static function get_tcp_rules_for_group($id)
+  {
+    return DB::find_rules_by_owner_id_and_owner_type('tcp', $id, 'Group');
+  }
+
+  static function sort_tcp_rules(array $ids)
+  {
+    foreach ($ids as $index => $id) {
+      DB::update_rule_position('tcp', $id, $index + 1);
     }
   }
 }
