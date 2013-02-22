@@ -163,6 +163,7 @@ $groups_update = function($id) use ($app) {
     'group' => Core::get_group($id),
     'members' => Core::get_group_members($id),
     'http_rules' => Core::get_http_rules_for_group($id),
+    'tcp_rules' => Core::get_tcp_rules_for_group($id),
     'errors' => $errors
   ));
 };

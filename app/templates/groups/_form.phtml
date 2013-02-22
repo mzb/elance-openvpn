@@ -3,13 +3,15 @@
 <div class="control-group">
   <label class="control-label" for="group-name">Name</label>
   <div class="controls">
-    <input name="name" type="text" id="group-name" value="<?php echo $params ? $params['name'] : $group->name ?>">
+    <input name="name" type="text" id="group-name"  class="input-xlarge"
+      value="<?php echo $params ? $params['name'] : $group->name ?>"
+      required>
   </div>
 </div>
 <div class="control-group">
   <label class="control-label" for="group-description">Description</label>
   <div class="controls">
-    <textarea name="description" id="group-description"><?php echo $params ? $params['description'] : $group->description ?></textarea>
+    <textarea name="description" id="group-description" class="input-xlarge"><?php echo $params ? $params['description'] : $group->description ?></textarea>
   </div>
 </div>
 <div class="control-group">

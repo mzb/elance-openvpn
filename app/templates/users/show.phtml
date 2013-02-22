@@ -9,7 +9,8 @@
 
 <form class="form-inline" action="<?php echo $app->urlFor('users.update', array('id' => $user->id)) ?>" method="post">
   <label for="user-fullname" style="margin-right: 20px">Fullname</label>
-  <input name="fullname" type="text" id="user-fullname" value="<?php echo $user->fullname ?>">
+  <input name="fullname" type="text" id="user-fullname" class="input-xlarge"
+         value="<?php echo $user->fullname ?>">
   <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
