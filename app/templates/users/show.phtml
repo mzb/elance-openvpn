@@ -38,25 +38,34 @@
   <!-- HTTP/HTTPS rules inherited from group -->
   <h5 class="muted">
     Rules inherited from group
-    <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#http-rules"
-       class="btn btn-small">Edit</a>
+    <?php if ($user->group_id): ?>
+      <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#http-rules"
+         class="btn btn-small">Edit</a>
+    <?php endif ?>
   </h5>
-  <?php partial('rules/_http_list.phtml', array(
-    'rules' => $http_group_rules,
-    'rule_owner_type' => 'Group',
-    'rule_owner_id' => $user->group_id,
-    'readonly' => true,
-    'disabled' => null
-  )) ?>
+  <div class="section">
+    <?php partial('rules/_http_list.phtml', array(
+      'rules' => $http_group_rules,
+      'rule_owner_type' => 'Group',
+      'rule_owner_id' => $user->group_id,
+      'readonly' => true,
+      'disabled' => null
+    )) ?>
+  </div>
   <!-- HTTP/HTTPS rules for this user -->
-  <h5 class="muted" style="margin-top: 20px;">Rules defined only for this user</h5>
-  <?php partial('rules/_http_list.phtml', array(
-    'rules' => $http_rules,
-    'rule_owner_type' => 'User',
-    'rule_owner_id' => $user->id,
-    'readonly' => $user->group_id > 0 ? true : null,
-    'disabled' => $user->group_id > 0 ? true : null,
-  )) ?>
+  <h5 class="muted" style="margin-top: 20px;">
+    Rules defined only for this user
+    <?php if ($user->group_id): ?> (inactive) <?php endif ?>
+  </h5>
+  <div class="section">
+    <?php partial('rules/_http_list.phtml', array(
+      'rules' => $http_rules,
+      'rule_owner_type' => 'User',
+      'rule_owner_id' => $user->id,
+      'readonly' => $user->group_id > 0 ? true : null,
+      'disabled' => $user->group_id > 0 ? true : null,
+    )) ?>
+  </div>
 </div>
 
 <div class="page-header">
@@ -66,25 +75,34 @@
   <!-- TCP/UDP rules inherited from group -->
   <h5 class="muted">
     Rules inherited from group
-    <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#tcp-rules"
-       class="btn btn-small">Edit</a>
+    <?php if ($user->group_id): ?>
+      <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#tcp-rules"
+         class="btn btn-small">Edit</a>
+    <?php endif ?>
   </h5>
-  <?php partial('rules/_tcp_list.phtml', array(
-    'rules' => $tcp_group_rules,
-    'rule_owner_type' => 'Group',
-    'rule_owner_id' => $user->group_id,
-    'readonly' => true,
-    'disabled' => null
-  )) ?>
+  <div class="section">
+    <?php partial('rules/_tcp_list.phtml', array(
+      'rules' => $tcp_group_rules,
+      'rule_owner_type' => 'Group',
+      'rule_owner_id' => $user->group_id,
+      'readonly' => true,
+      'disabled' => null
+    )) ?>
+  </div>
   <!-- TCP/UDP rules for this user -->
-  <h5 class="muted" style="margin-top: 20px">Rules defined only for this user</h5>
-  <?php partial('rules/_tcp_list.phtml', array(
-    'rules' => $tcp_rules,
-    'rule_owner_type' => 'User',
-    'rule_owner_id' => $user->id,
-    'readonly' => $user->group_id > 0 ? true : null,
-    'disabled' => $user->group_id > 0 ? true : null,
-  )) ?>
+  <h5 class="muted" style="margin-top: 20px;">
+    Rules defined only for this user
+    <?php if ($user->group_id): ?> (inactive) <?php endif ?>
+  </h5>
+  <div class="section">
+    <?php partial('rules/_tcp_list.phtml', array(
+      'rules' => $tcp_rules,
+      'rule_owner_type' => 'User',
+      'rule_owner_id' => $user->id,
+      'readonly' => $user->group_id > 0 ? true : null,
+      'disabled' => $user->group_id > 0 ? true : null,
+    )) ?>
+  </div>
 </div>
 
 <div class="page-header">
