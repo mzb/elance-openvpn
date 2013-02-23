@@ -7,11 +7,11 @@ class DB
   public static function connect(array $config)
   {
     self::$conn = new PDO(
-      $config['dsn'],
-      null,
-      null,
+      $config['db.dsn'],
+      $config['db.user'],
+      $config['db.password'],
       array(
-        PDO::ATTR_PERSISTENT => false,// FIXME: true in PRODUCTION
+        PDO::ATTR_PERSISTENT => $config['db.persistent'],
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
       )
     );

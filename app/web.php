@@ -6,9 +6,7 @@ require '../lib/view.php';
 require 'core.php';
 
 
-Core::init(array(
-  'dsn' => 'sqlite:' . __DIR__ . '/../db/development.db',
-));
+Core::init(require __DIR__ . '/../config/' . getenv('SLIM_MODE') . '.php');
 
 session_start();
 
@@ -16,8 +14,13 @@ $app = new \Slim\Slim(array(
   'templates.path' => __DIR__ . '/templates',
   'debug' => false,
   'log.enabled' => true,
-  'log.level' => \Slim\Log::DEBUG
 ));
+$app->configureMode('production', function() use ($app) {
+  $app->config(array('log.level' => \Slim\Log::ERROR));
+});
+$app->configureMode('development', function() use ($app) {
+  $app->config(array('log.level' => \Slim\Log::DEBUG));
+});
 
 $app->hook('slim.before.dispatch', function() use ($app) {
   if (!$app->request()->isXhr()) {
