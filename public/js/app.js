@@ -46,7 +46,8 @@ ovpn.rules.define = function() {
 };
 
 ovpn.rules.cancel = function() {
-  ovpn.rules.resetNewForm($(this).closest('.new-rule')).hide();
+  ovpn.rules.resetNewForm($(this).closest('.new-rule')).hide()
+    .find('.flash').remove();
   $(this).closest('.rules').find('a[data-action="rules.define"]').show();
   return false;
 };
