@@ -35,7 +35,8 @@
     <?php else: ?>
       <input type="number" name="port" placeholder="Port"
         value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
-        class="input-mini">
+        class="input-mini"
+        min="0">
     <?php endif ?>
   </span>
 
