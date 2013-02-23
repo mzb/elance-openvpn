@@ -75,7 +75,7 @@ $users_update = function($id) use ($app) {
 $users_toggle_suspend = function($id) use ($app) {
   $user = Core::toggle_user_suspend($id);
 
-  $app->flashNow('success', $user->suspended ? 'User suspended' : 'User unsuspended');
+  $app->flashNow('success', $user->suspended ? 'Access suspended' : 'Access unsuspended');
   $app->render('users/_toggle_suspend.phtml', array(
     'user' => $user
   ));

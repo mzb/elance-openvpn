@@ -19,10 +19,12 @@
           </td>
           <td><?php echo h($user->fullname) ?></td>
           <td style="text-align: right">
-            <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>">Edit</a>
+            <a class="btn btn-small" href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>" title="Edit">
+              <i class="icon-edit"></i>
+            </a>
             <a class="btn btn-small btn-danger" 
                data-delete="Are you shure you want to delete user <?php echo h($user->username) ?>?" 
-               href="<?php echo $app->urlFor('users.delete', array('id' => $user->id)) ?>">
+               href="<?php echo $app->urlFor('users.delete', array('id' => $user->id)) ?>" title="Delete">
               <i class="icon-remove"></i>
             </a>
           </td>

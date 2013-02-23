@@ -6,6 +6,7 @@
   <h3>List of users</h3>
 </div>
 
-<a href="<?php echo $app->urlFor('users.new') ?>" class="btn btn-success pull-right">Add user</a>
-
+<a href="<?php echo $app->urlFor('users.new') ?>" class="btn btn-success pull-right">
+  <i class="icon-plus icon-white"></i> Add user
+</a>
 <?php partial('users/_list.phtml', array('users' => $users)) ?>
