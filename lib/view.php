@@ -38,3 +38,12 @@ function partial($template, $data = array())
   extract($data);
   require \Slim\Slim::getInstance()->config('templates.path') . '/' . $template;
 }
+
+function escape_html($text, $flags = ENT_COMPAT, $double_encode = true)
+{
+  return htmlspecialchars($text, $flags, 'UTF-8', $double_encode);
+}
+function h($text, $flags = ENT_COMPAT, $double_encode = true)
+{
+  return escape_html($text, $flags, $double_encode);
+}

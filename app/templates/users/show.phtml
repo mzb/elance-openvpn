@@ -1,10 +1,10 @@
 <ul class="breadcrumb">
   <li><a href="<?php echo $app->urlFor('users') ?>">Users</a> <span class="divider">/</span></li>
-  <li><a href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>"><?php echo $user->username ?></a></li>
+  <li><a href="<?php echo $app->urlFor('users.show', array('id' => $user->id)) ?>"><?php echo h($user->username) ?></a></li>
 </ul>
 
 <div class="page-header">
-  <h3><?php echo $user->username ?> (<?php echo $user->fullname ?>)</h3>
+  <h3><?php echo h($user->username) ?> <small><?php echo h($user->fullname) ?></small></h3>
 </div>
 
 <form class="form-inline" action="<?php echo $app->urlFor('users.update', array('id' => $user->id)) ?>" method="post">

@@ -23,13 +23,15 @@
         <tr>
           <td><?php echo $group->id ?></td>
           <td>
-          <a href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>"><?php echo $group->name ?></a>
+            <a href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>">
+              <?php echo h($group->name) ?>
+          </a>
           </td>
-          <td><?php echo $group->description ?></td>
+          <td><?php echo h($group->description) ?></td>
           <td style="text-align: right">
             <a class="btn btn-small" href="<?php echo $app->urlFor('groups.show', array('id' => $group->id)) ?>">Edit</a>
             <a class="btn btn-small btn-danger" 
-               data-delete="Are you shure you want to delete group <?php echo $group->name ?>?" 
+               data-delete="Are you shure you want to delete group <?php echo h($group->name) ?>?" 
                href="<?php echo $app->urlFor('groups.delete', array('id' => $group->id)) ?>">
               <i class="icon-remove"></i>
             </a>

@@ -19,7 +19,7 @@
 
   <span class="control-group <?php echo isset($errors['address']) ? 'error' : '' ?>">
     <?php if (isset($readonly)): ?>
-      <span class="input input-xlarge"><?php echo $rule->address ?></span>
+      <span class="input input-xlarge"><?php echo h($rule->address) ?></span>
     <?php else: ?>
       <input type="text" name="address" placeholder="Domain or IP" 
         value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
@@ -31,7 +31,7 @@
 
   <span class="control-group <?php echo isset($errors['port']) ? 'error' : '' ?>">
     <?php if (isset($readonly)): ?>
-      <span class="input input-mini"><?php echo $rule->port ?></span>
+      <span class="input input-mini"><?php echo h($rule->port) ?></span>
     <?php else: ?>
       <input type="text" name="port" placeholder="Port"
         value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
