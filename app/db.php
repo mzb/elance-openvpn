@@ -298,6 +298,13 @@ SQL
       array($position, $id));
   }
 
+  public static function get_last_rule_position($rule_type)
+  {
+    $table_name = self::get_table_for_rule($rule_type);
+    $query = self::exec("SELECT max(position) FROM $table_name");
+    return intval($query->fetchColumn());
+  }
+
   private static function get_table_for_rule($rule)
   {
     if ($rule instanceof HTTPAccessRule || $rule === 'http') {

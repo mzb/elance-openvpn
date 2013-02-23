@@ -158,6 +158,9 @@ class Core
   {
     if ($id) {
       $rule = self::get_rule('http', $id);
+      $position = $rule->position;
+    } else {
+      $position = DB::get_last_rule_position('http') + 1;
     }
 
     $rule = AccessRule::factory('http', array(
@@ -167,7 +170,8 @@ class Core
       'http' => $http, 
       'https' => $https, 
       'allow' => $allow, 
-      'address' => $address
+      'address' => $address,
+      'position' => $position
     ));
 
     $errors = array();
@@ -217,6 +221,9 @@ class Core
   {
     if ($id) {
       $rule = self::get_rule('tcp', $id);
+      $position = $rule->position;
+    } else {
+      $position = DB::get_last_rule_position('tcp') + 1;
     }
 
     $rule = AccessRule::factory('tcp', array(
@@ -227,7 +234,8 @@ class Core
       'udp' => $udp, 
       'allow' => $allow, 
       'address' => $address,
-      'port' => $port
+      'port' => $port,
+      'position' => $position
     ));
 
     $errors = array();
