@@ -108,19 +108,15 @@ $users_delete = function($id) use ($app) {
 };
 
 $users_config = function($id, $os) use ($app) {
-  /* $user = DB::findUserById($id); */
-  /* if (!$user) $app->notFound(); */
+  $config = Core::get_openvpn_config_for_user($id, $os);
 
-  /* $config = OpenVPN::getConfig($id, $os); */
-
-  /* // FIXME: NOT WORKING! */
-  /* $app->response()->header('Content-Type', 'application/octet-stream'); */
-  /* $app->response()->header('Content-Length', filesize($config)); */
-  /* $app->response()->header('Content-Disposition', */ 
-  /*   sprintf('attachment; filename="%s"', basename($config)) */
-  /* ); */
-  /* $app->response()->header('Pragma', 'no-cache'); */
-  /* readfile($config); */
+  $app->response()->header('Content-Type', 'application/octet-stream');
+  $app->response()->header('Content-Length', filesize($config));
+  $app->response()->header('Content-Disposition', 
+    sprintf('attachment; filename="%s"', basename($config))
+  );
+  $app->response()->header('Pragma', 'no-cache');
+  readfile($config);
 };
 
 $users_membership = function($id) use ($app) {

@@ -2,7 +2,6 @@
 
 require 'models.php';
 require 'db.php';
-require '../lib/OpenVPN.php';
 
 
 class Core
@@ -285,6 +284,12 @@ class Core
     }
 
     return $errors;
+  }
+
+  static function get_openvpn_config_for_user($user_id, $os)
+  {
+    // TODO: Invoke script to get config
+    return __DIR__ . '/../public/js/app.js';
   }
 }
 
