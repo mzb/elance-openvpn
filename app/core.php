@@ -265,6 +265,27 @@ class Core
       DB::update_rule_position('tcp', $id, $index + 1);
     }
   }
+
+  static function change_admin_password($password, $confirmation)
+  {
+    $errors = array();
+    $password = trim($password);
+    $confirmation = trim($confirmation);
+
+    if (!$password) {
+      $errors['password'] = 'Password cannot be blank';
+    }
+
+    if ($password !== $confirmation) {
+      $errors['confirmation'] = 'Confirmation does not match password';
+    }
+
+    if (!$errors) {
+      // TODO: Invoke script to change password
+    }
+
+    return $errors;
+  }
 }
 
 
@@ -275,10 +296,3 @@ class RecordNotFound extends Exception
     parent::__construct(sprintf('Record not found: %s', (string)$key));
   }
 }
-
-
-
-
-
-
-

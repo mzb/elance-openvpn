@@ -98,7 +98,7 @@ $users_create = function() use ($app) {
   $app->render('users/new.phtml', array(
     'user' => $user,
     'errors' => $errors
-  ));
+  ), 400);
 };
 
 $users_delete = function($id) use ($app) {
@@ -174,7 +174,7 @@ $groups_update = function($id) use ($app) {
     'http_rules' => Core::get_http_rules_for_group($id),
     'tcp_rules' => Core::get_tcp_rules_for_group($id),
     'errors' => $errors
-  ));
+  ), 400);
 };
 
 $groups_new = function() use ($app) {
@@ -200,7 +200,7 @@ $groups_create = function() use ($app) {
   $app->render('groups/new.phtml', array(
     'group' => $group,
     'errors' => $errors
-  ));
+  ), 400);
 };
 
 $groups_delete = function($id) use ($app) {
@@ -290,6 +290,34 @@ $app->post('/rules/tcp/:id', $tcp_rules_save)->name('tcp_rules.update');
 $app->delete('/rules/tcp/:id', $tcp_rules_delete)->name('tcp_rules.delete');
 $app->post('/rules/tcp', $tcp_rules_save)->name('tcp_rules.create');
 
+$password_edit = function() use ($app) {
+  $app->render('password_edit.phtml', array(
+    'password' => null,
+    'confirmation' => null,
+    'errors' => null
+  ));
+};
+
+$password_update = function() use ($app) {
+  $password = $app->request()->params('password');
+  $confirmation = $app->request()->params('confirmation');
+
+  $errors = Core::change_admin_password($password, $confirmation);
+
+  if (!$errors) {
+    $app->flash('success', 'Password changed');
+    $app->redirect($app->urlFor('password.edit'));
+  }
+
+  $app->render('password_edit.phtml', array(
+    'password' => $password,
+    'confirmation' => $confirmation,
+    'errors' => $errors
+  ), 400);
+};
+
+$app->get('/password', $section('password.edit'), $password_edit)->name('password.edit');
+$app->post('/password', $section('password.edit'), $password_update)->name('password.update');
 
 
 return $app;
