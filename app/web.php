@@ -78,21 +78,26 @@ $users_toggle_suspend = function($id) use ($app) {
 $users_new = function() use ($app) {
   $user = new User();
 
-  if ('POST' == $app->request()->getMethod()) {
-    list($user, $errors) = Core::create_user(
-      $app->request()->params('username'), 
-      $app->request()->params('fullname')
-    );
+  $app->render('users/new.phtml', array(
+    'user' => $user,
+    'errors' => null
+  ));
+};
 
-    if (!$errors) {
-      $app->flash('success', 'User added');
-      $app->redirect($app->urlFor('users'));
-    }
+$users_create = function() use ($app) {
+  list($user, $errors) = Core::create_user(
+    $app->request()->params('username'), 
+    $app->request()->params('fullname')
+  );
+
+  if (!$errors) {
+    $app->flash('success', 'User added');
+    $app->redirect($app->urlFor('users'));
   }
 
   $app->render('users/new.phtml', array(
     'user' => $user,
-    'errors' => isset($errors) ? $errors : array()
+    'errors' => $errors
   ));
 };
 
@@ -127,7 +132,7 @@ $users_membership = function($id) use ($app) {
 $app->get('/', $section('users'), $users_index);
 $app->get('/users', $section('users'), $users_index)->name('users');
 $app->get('/users/new', $section('users'), $users_new)->name('users.new');
-$app->post('/users', $section('users'), $users_new)->name('users.create');
+$app->post('/users', $section('users'), $users_create)->name('users.create');
 $app->get('/users/:id', $section('users'), $users_show)->name('users.show');
 $app->post('/users/:id', $section('users'), $users_update)->name('users.update');
 $app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete');
@@ -175,21 +180,26 @@ $groups_update = function($id) use ($app) {
 $groups_new = function() use ($app) {
   $group = new Group();
 
-  if ('POST' == $app->request()->getMethod()) {
-    list($group, $errors) = Core::create_group(
-      $app->request()->params('name'),
-      $app->request()->params('description')
-    );
+  $app->render('groups/new.phtml', array(
+    'group' => $group,
+    'errors' => null
+  ));
+};
 
-    if (!$errors) {
-      $app->flash('success', 'Group added');
-      $app->redirect($app->urlFor('groups'));
-    }
+$groups_create = function() use ($app) {
+  list($group, $errors) = Core::create_group(
+    $app->request()->params('name'),
+    $app->request()->params('description')
+  );
+
+  if (!$errors) {
+    $app->flash('success', 'Group added');
+    $app->redirect($app->urlFor('groups'));
   }
 
   $app->render('groups/new.phtml', array(
     'group' => $group,
-    'errors' => isset($errors) ? $errors : array()
+    'errors' => $errors
   ));
 };
 
@@ -201,7 +211,7 @@ $groups_delete = function($id) use ($app) {
 
 $app->get('/groups', $section('groups'), $groups_index)->name('groups');
 $app->get('/groups/new', $section('groups'), $groups_new)->name('groups.new');
-$app->post('/groups', $section('groups'), $groups_new)->name('groups.create');
+$app->post('/groups', $section('groups'), $groups_create)->name('groups.create');
 $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
@@ -279,6 +289,7 @@ $app->post('/rules/tcp/sort', $tcp_rules_sort)->name('tcp_rules.sort');
 $app->post('/rules/tcp/:id', $tcp_rules_save)->name('tcp_rules.update');
 $app->delete('/rules/tcp/:id', $tcp_rules_delete)->name('tcp_rules.delete');
 $app->post('/rules/tcp', $tcp_rules_save)->name('tcp_rules.create');
+
 
 
 return $app;
