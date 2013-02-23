@@ -33,7 +33,7 @@
     <?php if (isset($readonly)): ?>
       <span class="input input-mini"><?php echo h($rule->port) ?></span>
     <?php else: ?>
-      <input type="text" name="port" placeholder="Port"
+      <input type="number" name="port" placeholder="Port"
         value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
         class="input-mini">
     <?php endif ?>

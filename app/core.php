@@ -242,6 +242,9 @@ class Core
     if (!trim($rule->address)) {
       $errors['address'] = 'Cannot be blank';
     }
+    if ($rule->port && !preg_match('/^\d+$/', $rule->port)) {
+      $errors['port'] = 'Should be a number';
+    }
 
     if (!$errors) {
       DB::save_rule($rule);
