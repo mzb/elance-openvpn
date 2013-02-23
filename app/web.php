@@ -2,6 +2,7 @@
 
 require '../lib/Slim/Slim.php';
 \Slim\Slim::registerAutoloader();
+require '../lib/Slim/Extras/Middleware/CsrfGuard.php';
 require '../lib/view.php';
 require 'core.php';
 
@@ -21,6 +22,8 @@ $app->configureMode('production', function() use ($app) {
 $app->configureMode('development', function() use ($app) {
   $app->config(array('log.level' => \Slim\Log::DEBUG));
 });
+
+$app->add(new \Slim\Extras\Middleware\CsrfGuard());
 
 $app->hook('slim.before.dispatch', function() use ($app) {
   if (!$app->request()->isXhr()) {

@@ -1,5 +1,33 @@
 var ovpn = ovpn || {};
 
+ovpn.getCSRFKeyAndToken = function() {
+  var key = 'csrf_token';
+  var token = $('meta[name="' + key + '"]').attr('content');
+  return {
+    key: key,
+    token: token
+  };
+};
+
+ovpn.addCSRFTokenToForm = function($form) {
+  var csrf = ovpn.getCSRFKeyAndToken();
+  $('<input type="hidden" name="' + csrf.key + '" value="' + csrf.token + '" />')
+    .appendTo($form);
+};
+
+ovpn.addCSRFTokenToRequest = function(request) {
+  if (!request.type.toUpperCase().match(/POST|PUT|DELETE/)) {
+    return;
+  }
+
+  var csrf = ovpn.getCSRFKeyAndToken();
+  var csrfParam = csrf.key + '=' + csrf.token;
+  var csrfParamPresent = new RegExp(csrfParam).test(request.data);
+  if (!csrfParamPresent) {
+    request.data = (request.data ? request.data + '&' : '') + csrfParam;
+  }
+};
+
 ovpn.hideFlashes = function() {
   $('.flash.alert-success, .flash.success').each(function() {
     var $this = $(this);
@@ -64,7 +92,6 @@ ovpn.rules.save = function() {
 
 ovpn.rules.sortable = function(selector) {
   $(selector).sortable({
-    // containment: 'parent',
     axis: 'y',
     cursor: 'move',
     handle: '.sortable-handle',
@@ -87,6 +114,9 @@ ovpn.users.toggleSuspend = function() {
 };
 
 $(function() {
+  ovpn.addCSRFTokenToForm($('form'));
+  $.ajaxPrefilter(ovpn.addCSRFTokenToRequest);
+
   $(document).ajaxSuccess(ovpn.hideFlashes);
 
   $('a[data-delete]').on('click', function() {
@@ -94,6 +124,7 @@ $(function() {
     if (!confirmMsg || confirm(confirmMsg)) {
       var $f = $('<form action="' + this.href + '" method="post"/>').appendTo($(this).parent());
       $f.append('<input type="hidden" name="_METHOD" value="DELETE">');
+      ovpn.addCSRFTokenToForm($f);
       $f.submit();
     }
     return false;
