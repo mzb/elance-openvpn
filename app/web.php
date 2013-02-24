@@ -234,7 +234,7 @@ $http_rules_save = function($id = null) use ($app) {
   );
 
   if ($errors) {
-    $app->flashNow('error', 'Incorrect values');
+    $app->flashNow('error', reset($errors));
   } else {
     $app->flashNow('success', 'Saved!');
   }
@@ -267,7 +267,7 @@ $tcp_rules_save = function($id = null) use ($app) {
   );
 
   if ($errors) {
-    $app->flashNow('error', 'Incorrect values');
+    $app->flashNow('error', reset($errors));
   } else {
     $app->flashNow('success', 'Saved!');
   }

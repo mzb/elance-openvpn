@@ -21,8 +21,8 @@
     <?php if (isset($readonly)): ?>
       <span class="input input-xlarge"><?php echo h($rule->address) ?></span>
     <?php else: ?>
-      <input type="text" name="address" placeholder="Domain or IP" 
-        value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
+      <input type="text" name="address" placeholder="Domain or IP address" 
+        value="<?php echo $rule->address ?>" 
         class="input-xlarge" 
         required
         <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>

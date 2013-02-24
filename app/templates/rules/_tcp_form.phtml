@@ -21,11 +21,10 @@
     <?php if (isset($readonly)): ?>
       <span class="input input-xlarge"><?php echo h($rule->address) ?></span>
     <?php else: ?>
-      <input type="text" name="address" placeholder="Domain or IP" 
-        value="<?php echo isset($errors['address']) ? $errors['address'] : $rule->address ?>" 
-        class="input-xlarge" 
-        required 
-        <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>
+      <input type="text" name="address" placeholder="Domain or IP address" 
+             value="<?php echo $rule->address ?>" class="input-xlarge" 
+             required 
+             <?php echo isset($errors['address']) ? 'autofocus' : '' ?>>
     <?php endif ?>
   </span>
 
@@ -34,9 +33,9 @@
       <span class="input input-mini"><?php echo h($rule->port) ?></span>
     <?php else: ?>
       <input type="number" name="port" placeholder="Port"
-        value="<?php echo isset($errors['port']) ? $errors['port'] : $rule->port ?>" 
-        class="input-mini"
-        min="0">
+             value="<?php echo $rule->port ?>" class="input-mini"
+             min="0" max="65535"
+             <?php echo isset($errors['port']) ? 'autofocus' : '' ?>>
     <?php endif ?>
   </span>
 

@@ -46,8 +46,7 @@ ovpn.rules.define = function() {
 };
 
 ovpn.rules.cancel = function() {
-  ovpn.rules.resetNewForm($(this).closest('.new-rule')).hide()
-    .find('.flash').remove();
+  ovpn.rules.resetNewForm($(this).closest('.new-rule')).hide();
   $(this).closest('.rules').find('a[data-action="rules.define"]').show();
   return false;
 };
@@ -65,12 +64,15 @@ ovpn.rules.remove = function() {
 
 ovpn.rules.resetNewForm = function($container) {
   var $form = $container.find('.control-group').removeClass('error').closest('form');
+
   $(':input', $form)
     .not(':button, :submit, :reset, :hidden, :checkbox')
     .val('')
     .removeAttr('selected');
   $(':checkbox', $form)
     .removeAttr('checked');
+  
+  $container.find('.flash').remove();
   
   return $container;
 };

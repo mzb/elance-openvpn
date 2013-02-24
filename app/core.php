@@ -2,6 +2,7 @@
 
 require 'models.php';
 require 'db.php';
+require '../lib/validations.php';
 
 
 class Core
@@ -175,8 +176,8 @@ class Core
     ));
 
     $errors = array();
-    if (!trim($rule->address)) {
-      $errors['address'] = 'Cannot be blank';
+    if (!is_valid_host(trim($rule->address))) {
+      $errors['address'] = 'Invalid domain or IP address';
     }
 
     if (!$errors) {
@@ -239,11 +240,11 @@ class Core
     ));
 
     $errors = array();
-    if (!trim($rule->address)) {
-      $errors['address'] = 'Cannot be blank';
+    if (!is_valid_host(trim($rule->address))) {
+      $errors['address'] = 'Invalid domain or IP address';
     }
-    if ($rule->port && !preg_match('/^\d+$/', $rule->port)) {
-      $errors['port'] = 'Should be a number';
+    if ($rule->port && !is_valid_port_number($rule->port)) {
+      $errors['port'] = 'Invalid port number (accepted range: [0..65535])';
     }
 
     if (!$errors) {
