@@ -56,7 +56,12 @@ ovpn.rules.remove = function() {
   if (!$trigger.data('confirm') || confirm($trigger.data('confirm'))) {
     $.post(this.href, {'_METHOD': 'DELETE'})
       .done(function() {
-        $trigger.closest('li').fadeOut('fast', function() { $(this).remove(); });
+        $trigger.closest('li').fadeOut('fast', function() { 
+          if ($trigger.closest('ul').find('li').length == 1) {
+            $trigger.closest('.rules').find('a[data-action="rules.saveAll"]').hide();
+          }
+          $(this).remove();
+        });
       });
   }
   return false;
@@ -84,6 +89,7 @@ ovpn.rules.save = function() {
     .done(function(data) {
       if (createRule) {
         $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
+        $trigger.closest('.rules').find('a[data-action="rules.saveAll"]').show();
         ovpn.rules.resetNewForm($trigger.closest('.new-rule'));
       } else {
         $trigger.closest('li').html(data);
@@ -92,6 +98,12 @@ ovpn.rules.save = function() {
     .error(function(data) {
       $trigger.closest(createRule ? '.new-rule' : 'li').html(data.responseText);
     });
+  return false;
+};
+
+ovpn.rules.saveAll = function() {
+  $(this).closest('.rules').find('ul form')
+    .trigger('submit');
   return false;
 };
 
@@ -142,6 +154,7 @@ $(function() {
   $(document).on('click', 'a[data-action="rules.remove"]', ovpn.rules.remove);
   $(document).on('submit', 'form[name="rule"]', ovpn.rules.save);
   ovpn.rules.sortable('.rules ul');
+  $('a[data-action="rules.saveAll"]').on('click', ovpn.rules.saveAll);
 
   $(document).on('click', 'a[data-action="users.toggleSuspend"]', ovpn.users.toggleSuspend);
 });

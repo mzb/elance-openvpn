@@ -73,11 +73,11 @@
   <?php if (!isset($readonly)): ?>
     <span class="control-group" style="margin-left: 10px">
       <?php if ($rule->id): ?>
-        <button name="update" type="submit" class="btn btn-primary btn-small" title="Save changes">Save</button>
-        <a data-action="rules.remove" data-confirm="Are you sure you want ot delete this rule?"
+        <button name="update" type="submit" class="btn btn-small" title="Save changes">Save</button>
+        <a data-action="rules.remove" 
           href="<?php echo $app->urlFor('tcp_rules.delete', array('id' => $rule->id)) ?>"
           title="Delete rule" 
-          class="btn btn-small btn-danger" style="margin-left: 10px"><i class="icon-remove"></i></a>
+          style="margin-left: 10px"><i class="icon-remove"></i></a>
       <?php else: ?>
         <button name="create" type="submit" class="btn btn-primary btn-small" title="Create rule">Create</button>
         or <a href="#" data-action="rules.cancel">Cancel</a>

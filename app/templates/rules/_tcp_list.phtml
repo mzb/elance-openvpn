@@ -12,19 +12,28 @@
     <?php endforeach ?>
   </ul>
 
-  <?php if (!isset($readonly)): ?>
-    <div class="new-rule" style="display: none">
-      <h5 class="muted">Define rule</h5>
-      <div class="section">
-        <?php partial('rules/_tcp_form.phtml', array('rule' => new TCPAccessRule(array(
-          'owner_type' => $rule_owner_type,
-          'owner_id' => $rule_owner_id
-        )))) ?>
-      </div>
-    </div>
+  <div style="position: relative">
+    <?php if (!isset($readonly)): ?>
+      <a href="#" data-action="rules.saveAll" class="btn btn-primary btn-small rules-save-all" 
+         style="left: 605px; <?php echo !$rules ? 'display: none' : '' ?>">
+        <i class="icon-ok icon-white"></i> Save all
+      </a>
+    <?php endif ?>
 
-    <a data-action="rules.define" href="#" class="btn btn-success btn-small">
-      <i class="icon-plus icon-white"></i> Define new rule
-    </a> 
-  <?php endif ?>
+    <?php if (!isset($readonly)): ?>
+      <div class="new-rule" style="display: none">
+        <h5 class="muted">Define new rule</h5>
+        <div class="section">
+          <?php partial('rules/_tcp_form.phtml', array('rule' => new TCPAccessRule(array(
+            'owner_type' => $rule_owner_type,
+            'owner_id' => $rule_owner_id
+          )))) ?>
+        </div>
+      </div>
+
+      <a data-action="rules.define" href="#" class="btn btn-success btn-small">
+        <i class="icon-plus icon-white"></i> Define new rule
+      </a> 
+    <?php endif ?>
+  </div>
 </div>
