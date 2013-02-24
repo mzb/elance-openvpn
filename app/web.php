@@ -9,8 +9,6 @@ require 'core.php';
 
 Core::init(require __DIR__ . '/../config/' . getenv('SLIM_MODE') . '.php');
 
-session_start();
-
 $app = new \Slim\Slim(array(
   'templates.path' => __DIR__ . '/templates',
   'debug' => false,
@@ -23,6 +21,11 @@ $app->configureMode('development', function() use ($app) {
   $app->config(array('log.level' => \Slim\Log::DEBUG));
 });
 
+$app->add(new \Slim\Middleware\SessionCookie(array(
+  'expires' => null,
+  'httponly' => true,
+  'secret' => 's1kr3t'
+)));
 $app->add(new \Slim\Extras\Middleware\CsrfGuard());
 
 $app->hook('slim.before.dispatch', function() use ($app) {
