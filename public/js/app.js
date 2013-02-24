@@ -66,10 +66,12 @@ ovpn.rules.remove = function() {
 ovpn.rules.resetNewForm = function($container) {
   var $form = $container.find('.control-group').removeClass('error').closest('form');
   $(':input', $form)
-    .not(':button, :submit, :reset, :hidden')
+    .not(':button, :submit, :reset, :hidden, :checkbox')
     .val('')
-    .removeAttr('checked')
     .removeAttr('selected');
+  $(':checkbox', $form)
+    .removeAttr('checked');
+  
   return $container;
 };
 
