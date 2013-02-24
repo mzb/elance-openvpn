@@ -19,6 +19,14 @@ class User extends Model
   public $fullname;
   public $suspended = 0;
   public $group_id;
+
+  public function is_member($group = null)
+  {
+    if ($group) {
+      return $this->group_id == $group->id;
+    }
+    return $this->group_id > 0;
+  }
 }
 
 class Group extends Model
