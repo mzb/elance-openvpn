@@ -32,6 +32,7 @@ class Core
       );
     }
 
+    self::execute('create_user', array($user->username));
     DB::save_user($user);
 
     return array($user, array());
@@ -47,14 +48,24 @@ class Core
   static function toggle_user_suspend($id)
   {
     $user = self::get_user($id);
+
     $user->suspended = !$user->suspended;
+    if ($user->suspended) {
+      self::execute('disable_user', array($user->username));
+    } else {
+      self::execute('enable_user', array($user->username));
+    }
+
     DB::update_user($user);
+
     return $user;
   }
 
   static function delete_user($id)
   {
-    DB::delete_user(self::get_user($id));
+    $user = self::get_user($id);
+    self::execute('del_user', array($user->username));
+    DB::delete_user($user);
   }
 
   static function list_users()
@@ -292,7 +303,7 @@ class Core
     }
 
     if (!$errors) {
-      // TODO: Invoke script to change password
+      self::execute('change_admin_pass', array($password));
     }
 
     return $errors;
@@ -300,8 +311,31 @@ class Core
 
   static function get_openvpn_config_for_user($user_id, $os)
   {
-    // TODO: Invoke script to get config
-    return __DIR__ . '/../public/js/app.js';
+    $user = self::get_user($user_id);
+    return self::execute('dl_user_conf', array($user->username, $os));
+  }
+
+  private static function execute($script, $args = array())
+  {
+    $ouput = array();
+    $error = 0;
+
+    $cmd = array("./../scripts/{$script}");
+    foreach ($args as $arg) {
+      $cmd[] = escapeshellarg($arg);
+    }
+    $cmd = join(' ', $cmd);
+
+    \Slim\Slim::getInstance()->getLog()->debug("Core::execute: $cmd");
+    exec($cmd, $output, $error);
+    \Slim\Slim::getInstance()->getLog()->debug('Core::execute => ' . json_encode($output));
+    \Slim\Slim::getInstance()->getLog()->debug("Core::execute error? $error");
+
+    if ($error) {
+      throw new RuntimeException(sprintf('Script failed: %s (%s)', $script, $error));
+    }
+
+    return $output ? $output[0] : null;
   }
 }
 
