@@ -181,7 +181,7 @@ class Core
       'owner_id' => $owner_id, 
       'http' => $http, 
       'https' => $https, 
-      'allow' => $allow, 
+      'allow' => (bool) $allow, 
       'address' => $address,
       'position' => $position
     ));
@@ -244,7 +244,7 @@ class Core
       'owner_id' => $owner_id, 
       'tcp' => $tcp, 
       'udp' => $udp, 
-      'allow' => $allow, 
+      'allow' => (bool) $allow, 
       'address' => $address,
       'port' => $port,
       'position' => $position
