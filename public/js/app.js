@@ -89,6 +89,8 @@ ovpn.rules.save = function() {
     .done(function(data) {
       if (createRule) {
         $trigger.closest('.rules').find('ul').append('<li>' + data + '</li>');
+        var id = $trigger.closest('.rules').find('li:last form').data('id');
+        $trigger.closest('.rules').find('li:last').attr('data-id', 'rule-' + id);
         $trigger.closest('.rules').find('a[data-action="rules.saveAll"]').show();
         ovpn.rules.resetNewForm($trigger.closest('.new-rule'));
       } else {

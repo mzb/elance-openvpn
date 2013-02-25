@@ -1,7 +1,7 @@
 <?php if (isset($readonly)): ?>
   <div class="form-inline <?php echo isset($disabled) ? 'muted' : '' ?>">
 <?php else: ?>
-  <form name="rule"
+  <form name="rule" data-id="<?php echo $rule->id ?>"
     action="<?php echo $app->urlFor($rule->id ? 'http_rules.update' : 'http_rules.create', array('id' => $rule->id)) ?>" 
     method="post" class="form-inline">
 <?php endif ?>
