@@ -1,5 +1,11 @@
 var ovpn = ovpn || {};
 
+ovpn.ajaxErrorHandler = function(event, xhr, settings, error) {
+  if (xhr.status == 500) {
+    alert("500 Server Error\nOh dear, something went wrong!");
+  }
+};
+
 ovpn.getCSRFKeyAndToken = function() {
   var key = 'csrf_token';
   var token = $('meta[name="' + key + '"]').attr('content');
@@ -96,6 +102,7 @@ ovpn.rules.save = function() {
       }
     })
     .error(function(data) {
+      if (!data.responseText) return;
       if (createRule) {
         $trigger.closest('.new-rule').find('.section').html(data.responseText);
       } else {
@@ -139,6 +146,7 @@ $(function() {
   $.ajaxPrefilter(ovpn.addCSRFTokenToRequest);
 
   $(document).ajaxSuccess(ovpn.hideFlashes);
+  $(document).ajaxError(ovpn.ajaxErrorHandler);
 
   $('a[data-delete]').on('click', function() {
     var confirmMsg = $(this).data('delete');
