@@ -37,10 +37,23 @@ $app->hook('slim.before.dispatch', function() use ($app) {
   }
 });
 
-$app->error(function($e) use ($app) {
+$app->error(function(\Exception $e) use ($app) {
   $app->getLog()->error($e);
   if ($e instanceof RecordNotFound) {
     $app->notFound();
+  }
+  if (!$app->request()->isXhr()) {
+    echo require('templates/500.html');
+  }
+});
+
+$app->notFound(function() use ($app) {
+  if (!$app->request()->isXhr()) {
+    $app->view(new LayoutView());
+    $app->view()->setLayout('layout.phtml');
+    $app->render('404.phtml', array(
+      'section' => null
+    ));
   }
 });
 
