@@ -98,7 +98,11 @@ ovpn.rules.save = function() {
       }
     })
     .error(function(data) {
-      $trigger.closest(createRule ? '.new-rule' : 'li').html(data.responseText);
+      if (createRule) {
+        $trigger.closest('.new-rule').find('.section').html(data.responseText);
+      } else {
+        $trigger.closest('li').html(data.responseText);
+      }
     });
   return false;
 };
