@@ -19,6 +19,10 @@ class User extends Model
   public $fullname;
   public $suspended = 0;
   public $group_id;
+  public $redirect_all_traffic = 0;
+
+  /** @var Group */
+  public $group;
 
   public function is_member($group = null)
   {
@@ -33,6 +37,7 @@ class Group extends Model
 {
   public $name;
   public $description;
+  public $redirect_all_traffic = 0;
 }
 
 

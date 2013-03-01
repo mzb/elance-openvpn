@@ -1,0 +1,5 @@
+ALTER TABLE users
+  ADD COLUMN redirect_all_traffic TINYINT NOT NULL DEFAULT 0;
+
+ALTER TABLE groups
+  ADD COLUMN redirect_all_traffic TINYINT NOT NULL DEFAULT 0;

@@ -43,6 +43,23 @@ ovpn.hideFlashes = function() {
   });
 };
 
+ovpn.setRedirectAllTraffic = function() {
+  var $checkbox = $(this);
+  var $form = $checkbox.closest('form');
+  $.ajax({
+    type: $form.attr('method'),
+    url: $form.attr('action'),
+    data: $form.serialize()
+  })
+  .done(function(data) {
+    $form.closest('.section').html(data);
+  })
+  .error(function() {
+    $checkbox.removeAttr('checked');
+  });
+  return false;
+};
+
 ovpn.rules = {};
 
 ovpn.rules.define = function() {
@@ -141,6 +158,7 @@ ovpn.users.toggleSuspend = function() {
   return false;
 };
 
+
 $(function() {
   ovpn.addCSRFTokenToForm($('form'));
   $.ajaxPrefilter(ovpn.addCSRFTokenToRequest);
@@ -169,4 +187,5 @@ $(function() {
   $('a[data-action="rules.saveAll"]').on('click', ovpn.rules.saveAll);
 
   $(document).on('click', 'a[data-action="users.toggleSuspend"]', ovpn.users.toggleSuspend);
+  $(document).on('click', ':checkbox[data-action="ovpn.setRedirectAllTraffic"]', ovpn.setRedirectAllTraffic);
 });

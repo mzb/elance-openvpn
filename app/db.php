@@ -59,12 +59,20 @@ class DB
 
   public static function update_user($user)
   {
-    self::exec(
-      'UPDATE users SET fullname = :fullname, suspended = :suspended, group_id = :group_id WHERE id = :id',
+    self::exec(<<<SQL
+      UPDATE users SET 
+        fullname = :fullname, 
+        suspended = :suspended, 
+        group_id = :group_id, 
+        redirect_all_traffic = :redirect_all_traffic
+        WHERE id = :id
+SQL
+      ,
       array(
         ':fullname' => $user->fullname, 
         ':suspended' => $user->suspended, 
         ':group_id' => $user->group_id,
+        ':redirect_all_traffic' => $user->redirect_all_traffic,
         ':id' => $user->id
       )
     );
@@ -72,8 +80,11 @@ class DB
 
   public static function save_user($user)
   {
-    self::exec(
-      'INSERT INTO users (id, username, fullname, suspended) VALUES(NULL, :username, :fullname, :suspended)',
+    self::exec(<<<SQL
+      INSERT INTO users (id, username, fullname, suspended) VALUES 
+      (NULL, :username, :fullname, :suspended)
+SQL
+      ,
       array(
         ':username' => $user->username,
         ':fullname' => $user->fullname,
@@ -130,11 +141,18 @@ class DB
 
   public static function update_group($group)
   {
-    self::exec(
-      'UPDATE groups SET name = :name, description = :description WHERE id = :id',
+    self::exec(<<<SQL
+      UPDATE groups SET 
+        name = :name, 
+        description = :description, 
+        redirect_all_traffic = :redirect_all_traffic
+        WHERE id = :id
+SQL
+      ,
       array(
         ':name' => $group->name, 
         ':description' => $group->description, 
+        ':redirect_all_traffic' => $group->redirect_all_traffic,
         ':id' => $group->id
       )
     );

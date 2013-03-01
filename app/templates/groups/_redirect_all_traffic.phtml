@@ -1,0 +1,12 @@
+<form class="form-inline well well-small" method="post"
+      action="<?php echo $app->urlFor('groups.redirect_all_traffic', array('id' => $group->id)) ?>"
+      style="margin-bottom: 0">
+  <label class="checkbox">
+    <input type="checkbox" value="1" name="redirect_all_traffic"
+        <?php echo $group->redirect_all_traffic ? 'checked="checked"' : '' ?>
+        data-action="ovpn.setRedirectAllTraffic">
+    Redirect all group traffic through VPN
+  </label>
+</form>
+
+<?php partial('_inline_flash.phtml', array('flash' => $flash)) ?>

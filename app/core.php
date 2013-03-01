@@ -61,6 +61,17 @@ class Core
     return $user;
   }
 
+  static function set_redirect_all_user_traffic($id, $value)
+  {
+    $user = self::get_user($id);
+
+    $user->redirect_all_traffic = (bool) $value;
+
+    DB::update_user($user);
+
+    return $user;
+  }
+
   static function delete_user($id)
   {
     $user = self::get_user($id);
@@ -163,6 +174,17 @@ class Core
   {
     $group = self::get_group($id);
     DB::delete_group($group);
+  }
+
+  static function set_redirect_all_group_traffic($id, $value)
+  {
+    $group = self::get_group($id);
+
+    $group->redirect_all_traffic = (bool) $value;
+
+    DB::update_group($group);
+
+    return $group;
   }
 
   static function save_http_rule($owner_type, $owner_id, $http, $https, $allow, $address, 

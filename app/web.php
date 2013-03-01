@@ -72,6 +72,10 @@ $users_index = function() use ($app) {
 
 $users_show = function($id) use ($app) {
   $user = Core::get_user($id);
+  if ($user->is_member()) {
+    $user->group = Core::get_group($user->group_id);
+  }
+
   $app->render('users/show.phtml', array(
     'user' => $user,
     'http_rules' => Core::get_http_rules_for_user($id),
@@ -93,6 +97,18 @@ $users_toggle_suspend = function($id) use ($app) {
 
   $app->flashNow('success', $user->suspended ? 'Access suspended' : 'Access unsuspended');
   $app->render('users/_toggle_suspend.phtml', array(
+    'user' => $user
+  ));
+};
+
+$users_redirect_all_traffic = function($id) use ($app) {
+  $user = Core::set_redirect_all_user_traffic(
+    $id,
+    $app->request()->params('redirect_all_traffic')
+  );
+
+  $app->flashNow('success', 'Saved!');
+  $app->render('users/_redirect_all_traffic.phtml', array(
     'user' => $user
   ));
 };
@@ -155,6 +171,7 @@ $app->get('/users/:id', $section('users'), $users_show)->name('users.show');
 $app->post('/users/:id', $section('users'), $users_update)->name('users.update');
 $app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete');
 $app->post('/users/:id/toggle_suspend', $section('users'), $users_toggle_suspend)->name('users.toggle_suspend');
+$app->post('/users/:id/redirect_all_traffic', $section('users'), $users_redirect_all_traffic)->name('users.redirect_all_traffic');
 $app->get('/users/:id/config/:os', $section('users'), $users_config)->name('users.config');
 $app->post('/users/:id/membership', $section('users'), $users_membership)->name('users.membership');
 
@@ -227,12 +244,25 @@ $groups_delete = function($id) use ($app) {
   $app->redirect($app->urlFor('groups'));
 };
 
+$groups_redirect_all_traffic = function($id) use ($app) {
+  $group = Core::set_redirect_all_group_traffic(
+    $id,
+    $app->request()->params('redirect_all_traffic')
+  );
+
+  $app->flashNow('success', 'Saved!');
+  $app->render('groups/_redirect_all_traffic.phtml', array(
+    'group' => $group
+  ));
+};
+
 $app->get('/groups', $section('groups'), $groups_index)->name('groups');
 $app->get('/groups/new', $section('groups'), $groups_new)->name('groups.new');
 $app->post('/groups', $section('groups'), $groups_create)->name('groups.create');
 $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
+$app->post('/groups/:id/redirect_all_traffic', $section('groups'), $groups_redirect_all_traffic)->name('groups.redirect_all_traffic');
 
 $http_rules_save = function($id = null) use ($app) {
   $req = $app->request();
