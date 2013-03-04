@@ -32,7 +32,7 @@ class Core
       );
     }
 
-    self::execute('create_user', array($user->username));
+    $user->ip = self::execute('create_user', array($user->username));
     DB::save_user($user);
 
     return array($user, array());

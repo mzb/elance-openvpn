@@ -81,14 +81,15 @@ SQL
   public static function save_user($user)
   {
     self::exec(<<<SQL
-      INSERT INTO users (id, username, fullname, suspended) VALUES 
-      (NULL, :username, :fullname, :suspended)
+      INSERT INTO users (id, username, fullname, suspended, ip) VALUES 
+      (NULL, :username, :fullname, :suspended, :ip)
 SQL
       ,
       array(
         ':username' => $user->username,
         ':fullname' => $user->fullname,
-        ':suspended' => $user->suspended
+        ':suspended' => $user->suspended,
+        ':ip' => $user->ip,
       )
     );
   }
