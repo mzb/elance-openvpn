@@ -157,6 +157,18 @@ $users_config = function($id, $os) use ($app) {
   readfile($config);
 };
 
+$users_keys = function($id) use ($app) {
+  $keys = Core::get_openvpn_keys_for_user($id);
+
+  $app->response()->header('Content-Type', 'application/octet-stream');
+  $app->response()->header('Content-Length', filesize($keys));
+  $app->response()->header('Content-Disposition', 
+    sprintf('attachment; filename="%s"', basename($keys))
+  );
+  $app->response()->header('Pragma', 'no-cache');
+  readfile($keys);
+};
+
 $users_membership = function($id) use ($app) {
   Core::update_user_membership($id, $app->request()->params('group_id'));
   $app->flash('success', 'User group changed');
@@ -173,6 +185,7 @@ $app->delete('/users/:id', $section('users'), $users_delete)->name('users.delete
 $app->post('/users/:id/toggle_suspend', $section('users'), $users_toggle_suspend)->name('users.toggle_suspend');
 $app->post('/users/:id/redirect_all_traffic', $section('users'), $users_redirect_all_traffic)->name('users.redirect_all_traffic');
 $app->get('/users/:id/config/:os', $section('users'), $users_config)->name('users.config');
+$app->get('/users/:id/keys', $section('users'), $users_keys)->name('users.keys');
 $app->post('/users/:id/membership', $section('users'), $users_membership)->name('users.membership');
 
 

@@ -337,6 +337,12 @@ class Core
     return self::execute('dl_user_conf', array($user->username, $os));
   }
 
+  static function get_openvpn_keys_for_user($user_id)
+  {
+    $user = self::get_user($user_id);
+    return self::execute('dl_user_conf', array($user->username, 'keys'));
+  }
+
   private static function execute($script, $args = array())
   {
     $ouput = array();

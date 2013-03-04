@@ -110,12 +110,12 @@
 <div class="page-header">
   <h4>OpenVPN settings</h4>
 </div>
-<div class="section" style="margin-bottom: 120px" id="openvpn-settings">
+<div class="section" style="margin-bottom: 150px" id="openvpn-settings">
   <div class="section">
     <?php partial('users/_redirect_all_traffic.phtml', array('user' => $user)) ?>
   </div>
   <div class="section pull-left" style="margin-right: 60px">
-    <div class="btn-group ">
+    <div class="btn-group">
       <button class="btn dropdown-toggle " data-toggle="dropdown">
         <i class="icon-download-alt"></i> Download configuration
         <span class="caret"></span>
@@ -134,6 +134,12 @@
         <li>
           <a href="<?php echo $app->urlFor('users.config', array('id' => $user->id, 'os' => 'lnx')) ?>">
              for Linux
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a href="<?php echo $app->urlFor('users.keys', array('id' => $user->id)) ?>">
+             Download keys
           </a>
         </li>
       </ul>
