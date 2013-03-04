@@ -20,6 +20,7 @@ class User extends Model
   public $suspended = 0;
   public $group_id;
   public $redirect_all_traffic = 0;
+  public $ip;
 
   /** @var Group */
   public $group;
