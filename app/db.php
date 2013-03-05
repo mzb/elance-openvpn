@@ -97,6 +97,14 @@ SQL
   public static function delete_user($user)
   {
     self::exec('DELETE FROM users WHERE id = ?', array($user->id));
+    self::exec(
+      'DELETE FROM http_access_rules WHERE owner_id = ? and owner_type = "User"', 
+      array($user->id)
+    );
+    self::exec(
+      'DELETE FROM tcpudp_access_rules WHERE owner_id = ? and owner_type = "User"', 
+      array($user->id)
+    );
   }
 
   public static function find_groups()
@@ -162,6 +170,14 @@ SQL
   public static function delete_group($group)
   {
     self::exec('DELETE FROM groups WHERE id = ?', array($group->id));
+    self::exec(
+      'DELETE FROM http_access_rules WHERE owner_id = ? and owner_type = "Group"', 
+      array($group->id)
+    );
+    self::exec(
+      'DELETE FROM tcpudp_access_rules WHERE owner_id = ? and owner_type = "Group"', 
+      array($group->id)
+    );
   }
 
   public static function save_rule($rule)
