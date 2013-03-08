@@ -69,6 +69,8 @@ class Core
 
     DB::update_user($user);
 
+    self::execute('reload_user', array($user->username));
+
     return $user;
   }
 
@@ -168,12 +170,21 @@ class Core
 
     $user->group_id = $group_id;
     DB::update_user($user);
+
+    self::execute('reload_user', array($user->username));
   }
 
   static function delete_group($id)
   {
     $group = self::get_group($id);
     DB::delete_group($group);
+
+    $members = self::get_group_members($group->id);
+    foreach ($members as $user) {
+      $user->group_id = null;
+      DB::update_user($user);
+      self::execute('reload_user', array($user->username));
+    }
   }
 
   static function set_redirect_all_group_traffic($id, $value)
@@ -183,6 +194,8 @@ class Core
     $group->redirect_all_traffic = (bool) $value;
 
     DB::update_group($group);
+
+    self::execute('reload_group', array($group->name));
 
     return $group;
   }
@@ -215,6 +228,8 @@ class Core
 
     if (!$errors) {
       DB::save_rule($rule);
+      
+      self::execute_reload_rule_owner($rule);
     }
 
     return array($rule, $errors);
@@ -224,6 +239,8 @@ class Core
   {
     $rule = self::get_rule('http', $id);
     DB::delete_rule($rule);
+
+    self::execute_reload_rule_owner($rule);
   }
 
   static function get_http_rules_for_group($id)
@@ -243,11 +260,14 @@ class Core
     return $rule;
   }
 
-  static function sort_http_rules(array $ids)
+  static function sort_http_rules(array $rule_ids)
   {
-    foreach ($ids as $index => $id) {
+    foreach ($rule_ids as $index => $id) {
       DB::update_rule_position('http', $id, $index + 1);
     }
+    // Zakladamy, ze reguly sa od tego samego ownera
+    $rule = self::get_rule('http', $rule_ids[0]);
+    self::execute_reload_rule_owner($rule);
   }
 
   static function save_tcp_rule($owner_type, $owner_id, $tcp, $udp, $allow, $address, 
@@ -282,6 +302,8 @@ class Core
 
     if (!$errors) {
       DB::save_rule($rule);
+
+      self::execute_reload_rule_owner($rule);
     }
 
     return array($rule, $errors);
@@ -291,6 +313,8 @@ class Core
   {
     $rule = self::get_rule('tcp', $id);
     DB::delete_rule($rule);
+
+    self::execute_reload_rule_owner($rule);
   }
 
   static function get_tcp_rules_for_group($id)
@@ -303,11 +327,14 @@ class Core
     return DB::find_rules_by_owner_id_and_owner_type('tcp', $id, 'User');
   }
 
-  static function sort_tcp_rules(array $ids)
+  static function sort_tcp_rules(array $rule_ids)
   {
-    foreach ($ids as $index => $id) {
+    foreach ($rule_ids as $index => $id) {
       DB::update_rule_position('tcp', $id, $index + 1);
     }
+    // Zakladamy, ze reguly sa od tego samego ownera
+    $rule = self::get_rule('tcp', $rule_ids[0]);
+    self::execute_reload_rule_owner($rule);
   }
 
   static function change_admin_password($password, $confirmation)
@@ -341,6 +368,17 @@ class Core
   {
     $user = self::get_user($user_id);
     return self::execute('dl_user_conf', array($user->username, 'keys'));
+  }
+
+  private static function execute_reload_rule_owner($rule)
+  {
+    if ('User' === $rule->owner_type) {
+      $user = self::get_user($rule->owner_id);
+      self::execute('reload_user', array($user->username));
+    } else {
+      $group = self::get_group($rule->owner_id);
+      self::execute('reload_group', array($group->name));
+    }
   }
 
   private static function execute($script, $args = array())
