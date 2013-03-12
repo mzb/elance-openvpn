@@ -40,7 +40,12 @@
   <h4>OpenVPN settings</h4>
 </div>
 <div class="section" id="openvpn-settings">
-  <?php partial('groups/_redirect_all_traffic.phtml', array('group' => $group)) ?>
+  <div class="section" style="margin-bottom: 15px">
+    <?php partial('groups/_redirect_all_traffic.phtml', array('group' => $group)) ?>
+  </div>
+  <div class="section">
+    <?php partial('groups/_default_policy.phtml', array('group' => $group)) ?>
+  </div>
 </div>
 
 <div class="page-header">

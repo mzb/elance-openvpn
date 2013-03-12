@@ -21,6 +21,7 @@ class User extends Model
   public $group_id;
   public $redirect_all_traffic = 0;
   public $ip;
+  public $default_policy = 0; // 0 = Deny, 1 = Allow
 
   /** @var Group */
   public $group;
@@ -34,11 +35,12 @@ class User extends Model
   }
 }
 
-class Group extends Model
+class Group extends Model 
 {
   public $name;
   public $description;
   public $redirect_all_traffic = 0;
+  public $default_policy = 0; // 0 = Deny, 1 = Allow
 }
 
 

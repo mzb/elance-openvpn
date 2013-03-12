@@ -113,6 +113,18 @@ $users_redirect_all_traffic = function($id) use ($app) {
   ));
 };
 
+$users_set_default_policy = function($id) use ($app) {
+  $user = Core::set_default_user_policy(
+    $id,
+    $app->request()->params('default_policy')
+  );
+
+  $app->flashNow('success', 'Saved!');
+  $app->render('users/_default_policy.phtml', array(
+    'user' => $user
+  ));
+};
+
 $users_new = function() use ($app) {
   $user = new User();
 
@@ -187,6 +199,7 @@ $app->post('/users/:id/redirect_all_traffic', $section('users'), $users_redirect
 $app->get('/users/:id/config/:os', $section('users'), $users_config)->name('users.config');
 $app->get('/users/:id/keys', $section('users'), $users_keys)->name('users.keys');
 $app->post('/users/:id/membership', $section('users'), $users_membership)->name('users.membership');
+$app->post('/users/:id/default_policy', $section('users'), $users_set_default_policy)->name('users.default_policy');
 
 
 $groups_index = function() use ($app) {
@@ -257,7 +270,7 @@ $groups_delete = function($id) use ($app) {
   $app->redirect($app->urlFor('groups'));
 };
 
-$groups_redirect_all_traffic = function($id) use ($app) {
+$groups_set_redirect_all_traffic = function($id) use ($app) {
   $group = Core::set_redirect_all_group_traffic(
     $id,
     $app->request()->params('redirect_all_traffic')
@@ -269,13 +282,26 @@ $groups_redirect_all_traffic = function($id) use ($app) {
   ));
 };
 
+$groups_set_default_policy = function($id) use ($app) {
+  $group = Core::set_default_group_policy(
+    $id,
+    $app->request()->params('default_policy')
+  );
+
+  $app->flashNow('success', 'Saved!');
+  $app->render('groups/_default_policy.phtml', array(
+    'group' => $group
+  ));
+};
+
 $app->get('/groups', $section('groups'), $groups_index)->name('groups');
 $app->get('/groups/new', $section('groups'), $groups_new)->name('groups.new');
 $app->post('/groups', $section('groups'), $groups_create)->name('groups.create');
 $app->get('/groups/:id', $section('groups'), $groups_show)->name('groups.show');
 $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.update');
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
-$app->post('/groups/:id/redirect_all_traffic', $section('groups'), $groups_redirect_all_traffic)->name('groups.redirect_all_traffic');
+$app->post('/groups/:id/redirect_all_traffic', $section('groups'), $groups_set_redirect_all_traffic)->name('groups.redirect_all_traffic');
+$app->post('/groups/:id/default_policy', $section('groups'), $groups_set_default_policy)->name('groups.default_policy');
 
 $rules_reload_owner = function($owner_type, $owner_id) use ($app) {
   Core::execute_reload_rule_owner($owner_type, $owner_id);

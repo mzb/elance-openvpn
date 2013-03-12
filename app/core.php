@@ -74,6 +74,19 @@ class Core
     return $user;
   }
 
+  static function set_default_user_policy($id, $value)
+  {
+    $user = self::get_user($id);
+
+    $user->default_policy = (bool) $value;
+
+    DB::update_user($user);
+
+    self::execute('reload_user', array($user->username));
+
+    return $user;
+  }
+
   static function delete_user($id)
   {
     $user = self::get_user($id);
@@ -192,6 +205,19 @@ class Core
     $group = self::get_group($id);
 
     $group->redirect_all_traffic = (bool) $value;
+
+    DB::update_group($group);
+
+    self::execute('reload_group', array($group->name));
+
+    return $group;
+  }
+
+  static function set_default_group_policy($id, $value)
+  {
+    $group = self::get_group($id);
+
+    $group->default_policy = (bool) $value;
 
     DB::update_group($group);
 

@@ -1,0 +1,11 @@
+<form class="form-inline" method="post"
+      action="<?php echo $app->urlFor('groups.default_policy', array('id' => $group->id)) ?>"
+      style="margin-bottom: 0">
+  <label for="default-policy">Default rule policy: </label>
+  <select name="default_policy" class="input-small" data-action="ovpn.setDefaultPolicy">
+    <option value="1" <?php echo $group->default_policy == 1 ? 'selected' : '' ?>>Allow</option>
+    <option value="0" <?php echo $group->default_policy == 0 ? 'selected' : '' ?>>Deny</option>
+  </select>
+</form>
+
+<?php partial('_inline_flash.phtml', array('flash' => $flash)) ?>

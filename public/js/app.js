@@ -60,6 +60,20 @@ ovpn.setRedirectAllTraffic = function() {
   return false;
 };
 
+ovpn.setDefaultPolicy = function() {
+  var $select = $(this);
+  var $form = $select.closest('form');
+  $.ajax({
+    type: $form.attr('method'),
+    url: $form.attr('action'),
+    data: $form.serialize()
+  })
+  .done(function(data) {
+    $form.closest('.section').html(data);
+  });
+  return false;
+};
+
 ovpn.rules = {};
 
 ovpn.rules.define = function() {
@@ -203,4 +217,5 @@ $(function() {
 
   $(document).on('click', 'a[data-action="users.toggleSuspend"]', ovpn.users.toggleSuspend);
   $(document).on('click', ':checkbox[data-action="ovpn.setRedirectAllTraffic"]', ovpn.setRedirectAllTraffic);
+  $(document).on('change', 'select[data-action="ovpn.setDefaultPolicy"]', ovpn.setDefaultPolicy);
 });

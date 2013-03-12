@@ -111,8 +111,11 @@
   <h4>OpenVPN settings</h4>
 </div>
 <div class="section" style="margin-bottom: 150px" id="openvpn-settings">
-  <div class="section">
+  <div class="section" style="margin-bottom: 15px">
     <?php partial('users/_redirect_all_traffic.phtml', array('user' => $user)) ?>
+  </div>
+  <div class="section" style="margin-bottom: 15px">
+    <?php partial('users/_default_policy.phtml', array('user' => $user)) ?>
   </div>
   <div class="section pull-left" style="margin-right: 60px">
     <div class="btn-group">

@@ -1,17 +1,20 @@
 <?php if ($user->is_member()): ?>
-  <div class="form-inline well well-small">
+  <div class="form-inline">
     <span class="input checkbox"> 
      <i class="icon-<?php echo $user->group->redirect_all_traffic ? 'ok' : 'remove' ?>"></i> 
       Redirect all user traffic through VPN 
-      (set by group <?php echo h($user->group->name) ?>)
-      <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#openvpn-settings"
-         class="btn btn-mini" title="Edit group settings"><i class="icon-edit"></i></a>
+      <span class="muted">
+        (set by group <?php echo h($user->group->name) ?>)
+        <a href="<?php echo $app->urlFor('groups.show', array('id' => $user->group_id)) ?>#openvpn-settings"
+           class="btn btn-mini" title="Edit group settings"><i class="icon-edit"></i></a>
+      </span>
     </span>
   </div>
 
 <?php else: ?>
-  <form class="form-inline well well-small" method="post"
-        action="<?php echo $app->urlFor('users.redirect_all_traffic', array('id' => $user->id)) ?>">
+  <form class="form-inline" method="post"
+        action="<?php echo $app->urlFor('users.redirect_all_traffic', array('id' => $user->id)) ?>"
+        style="margin-bottom: 0">
     <label class="checkbox">
       <input type="checkbox" value="1" name="redirect_all_traffic"
           <?php echo $user->redirect_all_traffic ? 'checked="checked"' : '' ?>

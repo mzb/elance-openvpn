@@ -64,7 +64,8 @@ class DB
         fullname = :fullname, 
         suspended = :suspended, 
         group_id = :group_id, 
-        redirect_all_traffic = :redirect_all_traffic
+        redirect_all_traffic = :redirect_all_traffic,
+        default_policy = :default_policy
         WHERE id = :id
 SQL
       ,
@@ -73,6 +74,7 @@ SQL
         ':suspended' => $user->suspended, 
         ':group_id' => $user->group_id,
         ':redirect_all_traffic' => $user->redirect_all_traffic,
+        ':default_policy' => $user->default_policy,
         ':id' => $user->id
       )
     );
@@ -154,7 +156,8 @@ SQL
       UPDATE groups SET 
         name = :name, 
         description = :description, 
-        redirect_all_traffic = :redirect_all_traffic
+        redirect_all_traffic = :redirect_all_traffic,
+        default_policy = :default_policy
         WHERE id = :id
 SQL
       ,
@@ -162,6 +165,7 @@ SQL
         ':name' => $group->name, 
         ':description' => $group->description, 
         ':redirect_all_traffic' => $group->redirect_all_traffic,
+        ':default_policy' => $group->default_policy,
         ':id' => $group->id
       )
     );
