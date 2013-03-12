@@ -103,7 +103,7 @@ ovpn.rules.resetNewForm = function($container) {
   return $container;
 };
 
-ovpn.rules.save = function() {
+ovpn.rules.save = function(opt_alwaysCallback) {
   var $trigger = $(this);
   var createRule = $trigger.find(':submit')[0].name === 'create';
   $.post(this.action, $(this).serialize())
@@ -125,13 +125,28 @@ ovpn.rules.save = function() {
       } else {
         $trigger.closest('li').html(data.responseText);
       }
+    })
+    .always(function() {
+      if ($.isFunction(opt_alwaysCallback)) opt_alwaysCallback();
     });
   return false;
 };
 
 ovpn.rules.saveAll = function() {
-  $(this).closest('.rules').find('ul form')
-    .trigger('submit');
+  var $btn = $(this);
+  var $rules = $btn.closest('.rules');
+  var unprocessedCount = $rules.find('ul form').length;
+  $rules.find('ul form').each(function() {
+    var action = this.action;
+    this.action += '?bulk=1';
+    ovpn.rules.save.call(this, function() { 
+      unprocessedCount -= 1;
+      if (unprocessedCount == 0) {
+        $.post($btn.data('done-url'));
+      }
+    });
+    this.action = action;
+  });
   return false;
 };
 

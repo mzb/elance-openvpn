@@ -14,7 +14,8 @@
 
   <div style="position: relative">
     <?php if (!isset($readonly)): ?>
-      <a href="#" data-action="rules.saveAll" class="btn btn-primary btn-small rules-save-all" 
+      <a href="#" data-action="rules.saveAll" data-done-url="<?php echo $app->urlFor('rules.reload_owner', array('owner_type' => $rule_owner_type, 'owner_id' => $rule_owner_id)) ?>"
+         class="btn btn-primary btn-small rules-save-all" 
          style="left: 605px; <?php echo !$rules ? 'display: none' : '' ?>">
         <i class="icon-ok icon-white"></i> Save all
       </a>

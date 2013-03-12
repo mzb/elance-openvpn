@@ -277,6 +277,12 @@ $app->post('/groups/:id', $section('groups'), $groups_update)->name('groups.upda
 $app->delete('/groups/:id', $section('groups'), $groups_delete)->name('groups.delete');
 $app->post('/groups/:id/redirect_all_traffic', $section('groups'), $groups_redirect_all_traffic)->name('groups.redirect_all_traffic');
 
+$rules_reload_owner = function($owner_type, $owner_id) use ($app) {
+  Core::execute_reload_rule_owner($owner_type, $owner_id);
+};
+
+$app->post('/rules/reload/:owner_type/:owner_id', $rules_reload_owner)->name('rules.reload_owner');
+
 $http_rules_save = function($id = null) use ($app) {
   $req = $app->request();
   list($rule, $errors) = Core::save_http_rule(
@@ -286,7 +292,8 @@ $http_rules_save = function($id = null) use ($app) {
     $req->params('https'),
     $req->params('allow'),
     $req->params('address'),
-    $id
+    $id,
+    $req->params('bulk') ? false : true
   );
 
   if ($errors) {
@@ -319,7 +326,8 @@ $tcp_rules_save = function($id = null) use ($app) {
     $req->params('allow'),
     $req->params('address'),
     $req->params('port'),
-    $id
+    $id,
+    $req->params('bulk') ? false : true
   );
 
   if ($errors) {

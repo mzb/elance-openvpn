@@ -201,7 +201,7 @@ class Core
   }
 
   static function save_http_rule($owner_type, $owner_id, $http, $https, $allow, $address, 
-                                 $id = null)
+                                 $id = null, $exec_reload = true)
   {
     if ($id) {
       $rule = self::get_rule('http', $id);
@@ -229,7 +229,7 @@ class Core
     if (!$errors) {
       DB::save_rule($rule);
       
-      self::execute_reload_rule_owner($rule);
+      if ($exec_reload) self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
     }
 
     return array($rule, $errors);
@@ -240,7 +240,7 @@ class Core
     $rule = self::get_rule('http', $id);
     DB::delete_rule($rule);
 
-    self::execute_reload_rule_owner($rule);
+    self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
   }
 
   static function get_http_rules_for_group($id)
@@ -267,11 +267,11 @@ class Core
     }
     // Zakladamy, ze reguly sa od tego samego ownera
     $rule = self::get_rule('http', $rule_ids[0]);
-    self::execute_reload_rule_owner($rule);
+    self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
   }
 
   static function save_tcp_rule($owner_type, $owner_id, $tcp, $udp, $allow, $address, 
-                                $port, $id = null)
+                                $port, $id = null, $exec_reload = true)
   {
     if ($id) {
       $rule = self::get_rule('tcp', $id);
@@ -303,7 +303,7 @@ class Core
     if (!$errors) {
       DB::save_rule($rule);
 
-      self::execute_reload_rule_owner($rule);
+      if ($exec_reload) self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
     }
 
     return array($rule, $errors);
@@ -314,7 +314,7 @@ class Core
     $rule = self::get_rule('tcp', $id);
     DB::delete_rule($rule);
 
-    self::execute_reload_rule_owner($rule);
+    self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
   }
 
   static function get_tcp_rules_for_group($id)
@@ -334,7 +334,7 @@ class Core
     }
     // Zakladamy, ze reguly sa od tego samego ownera
     $rule = self::get_rule('tcp', $rule_ids[0]);
-    self::execute_reload_rule_owner($rule);
+    self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
   }
 
   static function change_admin_password($password, $confirmation)
@@ -370,13 +370,13 @@ class Core
     return self::execute('dl_user_conf', array($user->username, 'keys'));
   }
 
-  private static function execute_reload_rule_owner($rule)
+  static function execute_reload_rule_owner($owner_type, $owner_id)
   {
-    if ('User' === $rule->owner_type) {
-      $user = self::get_user($rule->owner_id);
+    if ('User' === $owner_type) {
+      $user = self::get_user($owner_id);
       self::execute('reload_user', array($user->username));
     } else {
-      $group = self::get_group($rule->owner_id);
+      $group = self::get_group($owner_id);
       self::execute('reload_group', array($group->name));
     }
   }
