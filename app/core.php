@@ -32,8 +32,13 @@ class Core
       );
     }
 
-    $user->ip = self::execute('create_user', array($user->username));
-    DB::save_user($user);
+    try {
+      $user->ip = self::execute('create_user', array($user->username));
+      DB::save_user($user);
+    } catch (Exception $e) {
+      self::execute('del_user', array($user->username));
+      throw $e;
+    }
 
     return array($user, array());
   }
@@ -81,7 +86,6 @@ class Core
     $user->default_policy = (bool) $value;
 
     DB::update_user($user);
-
     self::execute('reload_user', array($user->username));
 
     return $user;
@@ -90,6 +94,7 @@ class Core
   static function delete_user($id)
   {
     $user = self::get_user($id);
+
     self::execute('del_user', array($user->username));
     DB::delete_user($user);
   }
@@ -183,7 +188,6 @@ class Core
 
     $user->group_id = $group_id;
     DB::update_user($user);
-
     self::execute('reload_user', array($user->username));
   }
 
@@ -207,7 +211,6 @@ class Core
     $group->redirect_all_traffic = (bool) $value;
 
     DB::update_group($group);
-
     self::execute('reload_group', array($group->name));
 
     return $group;
@@ -220,7 +223,6 @@ class Core
     $group->default_policy = (bool) $value;
 
     DB::update_group($group);
-
     self::execute('reload_group', array($group->name));
 
     return $group;
@@ -254,7 +256,6 @@ class Core
 
     if (!$errors) {
       DB::save_rule($rule);
-      
       if ($exec_reload) self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
     }
 
@@ -264,8 +265,8 @@ class Core
   static function delete_http_rule($id)
   {
     $rule = self::get_rule('http', $id);
-    DB::delete_rule($rule);
 
+    DB::delete_rule($rule);
     self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
   }
 
@@ -328,7 +329,6 @@ class Core
 
     if (!$errors) {
       DB::save_rule($rule);
-
       if ($exec_reload) self::execute_reload_rule_owner($rule->owner_type, $rule->owner_id);
     }
 
